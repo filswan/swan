@@ -1,4 +1,4 @@
-# trusted-miner
+# Trusted Miner
 A list of trusted miners by region
 
 NBFS Canada get 5Tb Datacap from Filecoin plus project. As orgnizatin located in North America, NBFS would like to allocate the data to miners in NA and EU.
