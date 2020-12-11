@@ -1,9 +1,9 @@
-minerid,location,slack_id
-f019104,Monteal,Charles Cao
-f02387,Monteal,Charles Cao
-f02401,Monteal,Charles Cao
-f01276,Monteal,Charles Cao
-f067545,TOronto,Dení
+miner_id,location,slack_id
+f019104,Monteal-CA,Charles Cao
+f02387,Monteal-CA,Charles Cao
+f02401,Monteal-CA,Charles Cao
+f01276,Monteal-CA,Charles Cao
+f067545,Toronto-CA,Dení
 f023467,EU,Phi-rjan
 f022142,NY US,Nelson
 f015927,New York-US,Chris
