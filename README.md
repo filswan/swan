@@ -6,8 +6,9 @@ https://docs.filecoin.io/store/lotus/very-large-files/#maximizing-storage-per-se
 The default start epoch is the 49 hours after you publish the deal, so it is current_epoch +5880
 md5 is optional.
 
-Please send us the deal CSV https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv  to us via contact@nbai.io
+Please send us the deal CSV with the following format https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv  to us via contact@nbai.io
 
+Note: md5 is optional, but it will good for you when retriving deals
 
 
 # For miners accept deals
