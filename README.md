@@ -4,7 +4,12 @@
 https://docs.filecoin.io/store/lotus/very-large-files/#maximizing-storage-per-sector
 
 The default start epoch is the 49 hours after you publish the deal, so it is current_epoch +5880
+
+We recommand you using 4 days for us prepare import for you, so it should be  current_epoch+(24*4+1)*60*2 = current_epoch+11640
 md5 is optional.
+```
+lotus client --start-epoch <current_epoch+11640>  generate-car <inputPath> <outputPath>
+```
 
 Please send us the deal CSV with the following format https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv  to us via contact@nbai.io
 
