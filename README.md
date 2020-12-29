@@ -32,13 +32,13 @@ For fields you don't know, please add the '', e.g.  f019104,bafy2bzacebikhvpxget
 
 There are two ways of uploading files:
 
-1. One-stage Upload
-Complete step Generate a unique piece CID ,Propose an offline deal, Prepare CSV for Offline Sealing
-* upload the csv with deal_id 
+* One-stage Upload
+Complete step  **Generate a unique piece CID**, **Propose an offline deal**,  **Prepare CSV for Offline Sealing**
+  * upload the csv with deal_id 
 
-2. Two-stage Upload
-* stage1: Complete step Generate a unique piece CID ,upload the csv with deal_id empty
-* stage2:  Complete step  Prepare CSV for Offline Sealing reupload the csv with deal_id
+* Two-stage Upload
+  * stage1: Complete step  **Generate a unique piece CID** , **upload the csv with deal_id empty**
+  * stage2:  Complete step  **Prepare CSV for Offline Sealing**, re-upload the csv with deal_id
 
 
 miner_id(mandatory) : miner you want to send the deal
