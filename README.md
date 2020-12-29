@@ -26,9 +26,19 @@ We recommand you using 4 days for us prepare import for you, so it should be  cu
 
 ### Prepare CSV for Offline Sealing
 
-Fill all the https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv with the data.
+Prepare the https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv with the data.
 You can upload a CSV with no deal id first, to enbale miner downloading first.The re-upload it again after the downlownding car file completed.
 For fields you don't know, please add the '', e.g.  f019104,bafy2bzacebikhvpxget3hz55jno74llgv7nmohu4jdl2r2n6onlynqq7jh3v6,https://www.download.com/test.car,,343612 if you do not have the md5 at the moment.
+
+There are two ways of uploading files:
+
+1. One-stage Upload
+* upload the csv with deal_id 
+
+2. Two-stage Upload
+* stage1: upload the csv with deal_id empty
+* stage2: reupload the csv with deal_id
+
 
 miner_id(mandatory) : miner you want to send the deal
 
