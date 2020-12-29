@@ -26,9 +26,11 @@ We recommand you using 4 days for us prepare import for you, so it should be  cu
 
 ### Prepare CSV for Offline Sealing
 
-miner_id(mandatory) : miner you want to send the deal
+Fill all the https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv with the data.
+You can upload a CSV with no deal id first, to enbale miner downloading first.The re-upload it again after the downlownding car file completed.
+For fields you don't know, please add the '', e.g.  f019104,bafy2bzacebikhvpxget3hz55jno74llgv7nmohu4jdl2r2n6onlynqq7jh3v6,https://www.download.com/test.car,,343612 if you do not have the md5 at the moment.
 
-deal_id(mandatory): Deal you need for sending
+miner_id(mandatory) : miner you want to send the deal
 
 file_path(mandatory): remote URL for download car
 
@@ -36,9 +38,8 @@ md5 (optional): md5sum used to verify the integrity of files
 
 start_epoch(mandatory): the epoch of the deal start
 
-Fill all the https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv with the data.
-You can upload a CSV with no deal id first, to enbale miner downloading first.The re-upload it again after the downlownding car file completed.
-For fields you don't know, please add the '', e.g.  f019104,bafy2bzacebikhvpxget3hz55jno74llgv7nmohu4jdl2r2n6onlynqq7jh3v6,https://www.download.com/test.car,,343612 if you do not have the md5 at the moment.
+deal_id(mandatory if choose one-stage upload): Deal_id you need for sending, if you decide using two steps upload you can keep this field empty for the first time, and reuploaded for the 2nd time.
+
 
 
 ### Upload CSV for Offline Sealing
