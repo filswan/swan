@@ -34,7 +34,7 @@ There are two ways of uploading files:
 
 * One-stage Upload
 Complete step  **Generate a unique piece CID**, **Propose an offline deal**,  **Prepare CSV for Offline Sealing**
-  * upload the csv with deal_id 
+  * upload the csv with deal_cid 
 
 * Two-stage Upload
   * stage1: Complete step  **Generate a unique piece CID** , **upload the csv with deal_id empty**
@@ -43,13 +43,13 @@ Complete step  **Generate a unique piece CID**, **Propose an offline deal**,  **
 
 miner_id(mandatory) : miner you want to send the deal
 
-file_path(mandatory): remote URL for download car
+file_source_url(mandatory): remote URL for download car
 
 md5 (optional): md5sum used to verify the integrity of files
 
 start_epoch(mandatory): the epoch of the deal start
 
-deal_id(mandatory if choose one-stage upload): Deal_id you need for sending, if you decide using two steps upload you can keep this field empty for the first time, and reuploaded for the 2nd time.
+deal_cid(mandatory if choose one-stage upload): Deal_id you need for sending, if you decide using two steps upload you can keep this field empty for the first time, and reuploaded for the 2nd time.
 
 
 
