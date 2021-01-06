@@ -1,4 +1,4 @@
-# Trusted Miner
+# Instruction
 ## Offline Deal
 ### Prepare files for Offline Deal
 https://docs.filecoin.io/store/lotus/very-large-files/#maximizing-storage-per-sector
