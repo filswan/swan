@@ -32,9 +32,9 @@ For fields you don't know, please add the '', e.g.  f019104,bafy2bzacebikhvpxget
 
 There are two ways of uploading files:
 
-* One-stage Upload
-Complete step  **Generate a unique piece CID**, **Propose an offline deal**,  **Prepare CSV for Offline Sealing**
-  * upload the csv with deal_cid 
+* One-stage Upload Complete step  **Generate a unique piece CID**, **Propose an offline deal**,  **Prepare CSV for
+  Offline Sealing**
+  * upload the csv with deal_cid
 
 * Two-stage Upload
   * stage1: Complete step  **Generate a unique piece CID** , **upload the csv with deal_id empty**
