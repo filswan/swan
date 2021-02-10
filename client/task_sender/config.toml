@@ -1,0 +1,6 @@
+[main]
+output_dir = "/tmp"
+download_url_prefix = "http://download"
+is_public = 1
+task_type = "Verified"
+generate_md5 = false
