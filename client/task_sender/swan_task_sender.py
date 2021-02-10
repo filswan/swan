@@ -69,6 +69,9 @@ if __name__ == '__main__':
     task_type = config['main']['task_type']
     generate_md5 = config['main']['generate_md5']
 
+    api_key = config['main']['api_key']
+    access_token = config['main']['access_token']
+
     file_paths = read_file_path_in_dir(input_path)
 
     csv_data_list = []
