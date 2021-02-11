@@ -49,7 +49,6 @@ def generate_csv_and_send(_task: SwanTask, _csv_data: List[dict], _client: SwanC
         # reset buffer position
         csv_file.seek(0)
 
-        client.refresh_token()
         client.post_task(_task, csv_file)
 
 

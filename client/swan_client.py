@@ -33,6 +33,7 @@ class SwanClient:
         self.api_url = api_url
         self.api_key = api_key
         self.access_token = access_token
+        self.refresh_token()
 
     def refresh_token(self):
         refresh_api_token_suffix = "/user/api_keys/jwt"
