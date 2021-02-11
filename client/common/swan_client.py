@@ -4,6 +4,8 @@ import os
 
 import requests
 
+from client.common.Miner import Miner
+
 api_url = "https://preapiswan.nbfspool.com"
 
 # task type
@@ -55,11 +57,18 @@ class SwanClient:
         create_task_method = 'POST'
 
         create_task_url = api_url + create_task_url_suffix
-
         payload_data = task.to_request_dict()
 
-        csv_name = task.task_name + ".csv"
         send_http_request(create_task_url, create_task_method, self.api_token, payload_data, file=csv)
+
+    def update_miner(self, miner: Miner):
+        update_miner_url_suffix = '/miners/%s/status' % miner.miner_id
+        update_miner_method = 'PUT'
+
+        update_miner_url = api_url + update_miner_url_suffix
+        payload_data = json.dumps(miner.to_request_dict())
+
+        send_http_request(update_miner_url, update_miner_method, self.api_token, payload_data)
 
 
 def send_http_request(url, method, token, payload, file=None):

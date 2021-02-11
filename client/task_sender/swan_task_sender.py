@@ -9,20 +9,8 @@ from os.path import isfile, join
 from pathlib import Path
 from typing import List
 
-import toml
-
-from client.swan_client import SwanClient, SwanTask
-
-
-def read_config(_config_path: str):
-    if _config_path is None:
-        _config_path = './config.toml'
-
-    # script_dir = os.path.dirname(__file__)
-    # file_path = os.path.join(script_dir, config_path)
-    _config = toml.load(_config_path)
-
-    return _config
+from client.common.config import read_config
+from client.common.swan_client import SwanClient, SwanTask
 
 
 def checksum(filename, hash_factory=hashlib.md5, chunk_num_blocks=128):
