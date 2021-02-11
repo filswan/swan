@@ -11,6 +11,8 @@ from typing import List
 
 import toml
 
+from client.swan_client import SwanClient, SwanTask
+
 
 def read_config(_config_path: str):
     if _config_path is None:
@@ -36,13 +38,19 @@ def read_file_path_in_dir(dir_path: str) -> List[str]:
     return _file_paths
 
 
-def generate_csv(_csv_data: List[dict]):
+def generate_csv_and_send(_task: SwanTask, _csv_data: List[dict], _client: SwanClient):
     with io.StringIO() as csv_file:
         fieldnames = ['miner_id', 'deal_cid', 'file_source_url', 'md5', 'start_epoch']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
         for line in _csv_data:
             csv_writer.writerow(line)
+
+        # reset buffer position
+        csv_file.seek(0)
+
+        client.refresh_token()
+        client.post_task(_task, csv_file)
 
 
 def move_file(from_path: str, to_dir: str):
@@ -51,22 +59,22 @@ def move_file(from_path: str, to_dir: str):
 
     if os.path.isfile(_to_path):
         _to_path = _to_path + str(int(time.time()))
-        filename = os.path.basename(_to_path)
     shutil.copyfile(from_path, _to_path)
     return _to_path
 
 
 if __name__ == '__main__':
     input_path = sys.argv[1]
-    if len(sys.argv) == 3:
-        config_path = sys.argv[2]
+    task_name = str(sys.argv[2])
+    if len(sys.argv) == 4:
+        config_path = sys.argv[3]
     else:
         config_path = None
     config = read_config(config_path)
     output_dir = config['main']['output_dir']
     download_url_prefix = config['main']['download_url_prefix']
     is_public = config['main']['is_public']
-    task_type = config['main']['task_type']
+    is_verified = config['main']['is_verified']
     generate_md5 = config['main']['generate_md5']
 
     api_key = config['main']['api_key']
@@ -93,4 +101,12 @@ if __name__ == '__main__':
                     'start_epoch': ""
                     }
         csv_data_list.append(csv_data)
-    generate_csv(csv_data_list)
+
+    client = SwanClient(api_key, access_token)
+
+    task = SwanTask(
+        task_name=task_name,
+        is_public=is_public,
+        is_verified=is_verified
+    )
+    generate_csv_and_send(task, csv_data_list, client)

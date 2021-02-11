@@ -4,5 +4,5 @@ download_url_prefix = "http://download"
 is_public = true
 is_verified = true
 generate_md5 = false
-api_key = "CNOsavVZ24ezxvO5Hf8w1g"
-access_token = "94644da64a55559a4d4ace7326c"
+api_key = ""
+access_token = ""

@@ -12,6 +12,20 @@ task_type_verified = "verified"
 task_type_regular = "regular"
 
 
+class SwanTask:
+    def __init__(self, task_name: str, is_public: bool, is_verified: bool):
+        self.task_name = task_name
+        self.is_public = is_public
+        self.is_verified = is_verified
+
+    def to_request_dict(self):
+        return {
+            'task_name': self.task_name,
+            'is_public': 1 if self.is_public else 0,
+            'type': task_type_verified if self.is_verified else task_type_regular
+        }
+
+
 class SwanClient:
     api_token = None
 
@@ -36,19 +50,16 @@ class SwanClient:
             logging.info(str(e))
             os.exit(1)
 
-    def post_task(self, task_name: str, is_public: bool, is_verified: bool, csv: IOBase):
+    def post_task(self, task: SwanTask, csv: IOBase):
         create_task_url_suffix = '/tasks'
         create_task_method = 'POST'
 
         create_task_url = api_url + create_task_url_suffix
 
-        payload_data = {
-            'task_name': task_name,
-            'is_public': 1 if is_public else 0,
-            'is_verified': task_type_verified if is_verified else task_type_regular
-        }
+        payload_data = task.to_request_dict()
 
-        send_http_request(create_task_url, create_task_method, self.api_token, payload_data, file=csv)
+        csv_name = task.task_name + ".csv"
+        send_http_request(create_task_url, create_task_method, self.api_token, payload_data, file=(csv_name, csv))
 
 
 def send_http_request(url, method, token, payload, file=None):
