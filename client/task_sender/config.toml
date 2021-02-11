@@ -1,5 +1,6 @@
 [main]
-output_dir = "/tmp"
+offline_mode = false
+output_dir = "/tmp/tasks"
 download_url_prefix = "http://download"
 is_public = true
 is_verified = true

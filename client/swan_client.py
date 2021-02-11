@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-from io import IOBase
 
 import requests
 
@@ -51,7 +50,7 @@ class SwanClient:
             logging.info(str(e))
             os.exit(1)
 
-    def post_task(self, task: SwanTask, csv: IOBase):
+    def post_task(self, task: SwanTask, csv):
         create_task_url_suffix = '/tasks'
         create_task_method = 'POST'
 
@@ -60,7 +59,7 @@ class SwanClient:
         payload_data = task.to_request_dict()
 
         csv_name = task.task_name + ".csv"
-        send_http_request(create_task_url, create_task_method, self.api_token, payload_data, file=(csv_name, csv))
+        send_http_request(create_task_url, create_task_method, self.api_token, payload_data, file=csv)
 
 
 def send_http_request(url, method, token, payload, file=None):

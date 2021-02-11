@@ -1,12 +1,12 @@
 import csv
 import hashlib
-import io
 import os
 import shutil
 import sys
 import time
 from os import listdir
 from os.path import isfile, join
+from pathlib import Path
 from typing import List
 
 import toml
@@ -38,18 +38,19 @@ def read_file_path_in_dir(dir_path: str) -> List[str]:
     return _file_paths
 
 
-def generate_csv_and_send(_task: SwanTask, _csv_data: List[dict], _client: SwanClient):
-    with io.StringIO() as csv_file:
+def generate_csv_and_send(_task: SwanTask, _csv_data: List[dict], _output_dir: str, _client: SwanClient):
+    _csv_name = _task.task_name + str(int(time.time())) + ".csv"
+    _csv_path = os.path.join(_output_dir, _csv_name)
+    with open(_csv_path, "a") as csv_file:
         fieldnames = ['miner_id', 'deal_cid', 'file_source_url', 'md5', 'start_epoch']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
         for line in _csv_data:
             csv_writer.writerow(line)
 
-        # reset buffer position
-        csv_file.seek(0)
-
-        client.post_task(_task, csv_file)
+    if _client:
+        with open(_csv_path, "r") as csv_file:
+            _client.post_task(_task, csv_file)
 
 
 def move_file(from_path: str, to_dir: str):
@@ -75,11 +76,13 @@ if __name__ == '__main__':
     is_public = config['main']['is_public']
     is_verified = config['main']['is_verified']
     generate_md5 = config['main']['generate_md5']
+    offline_mode = config['main']['offline_mode']
 
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
 
     file_paths = read_file_path_in_dir(input_path)
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     csv_data_list = []
 
@@ -101,11 +104,14 @@ if __name__ == '__main__':
                     }
         csv_data_list.append(csv_data)
 
-    client = SwanClient(api_key, access_token)
+    if offline_mode:
+        client = None
+    else:
+        client = SwanClient(api_key, access_token)
 
     task = SwanTask(
         task_name=task_name,
         is_public=is_public,
         is_verified=is_verified
     )
-    generate_csv_and_send(task, csv_data_list, client)
+    generate_csv_and_send(task, csv_data_list, output_dir, client)
