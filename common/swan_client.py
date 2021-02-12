@@ -4,7 +4,7 @@ import os
 
 import requests
 
-from client.common.Miner import Miner
+from common.Miner import Miner
 
 api_url = "https://preapiswan.nbfspool.com"
 
