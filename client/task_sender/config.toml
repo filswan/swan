@@ -1,6 +1,7 @@
 [main]
 offline_mode = false
 output_dir = "/tmp/tasks"
+api_url = ""
 download_url_prefix = "http://download"
 is_public = true
 is_verified = true
