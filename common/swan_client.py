@@ -50,7 +50,7 @@ class SwanClient:
             self.api_token = resp_data['jwt']
         except Exception as e:
             logging.info(str(e))
-            os.exit(1)
+            os._exit(1)
 
     def post_task(self, task: SwanTask, csv):
         create_task_url_suffix = '/tasks'
@@ -69,6 +69,21 @@ class SwanClient:
         payload_data = json.dumps(miner.to_request_dict())
 
         send_http_request(update_miner_url, update_miner_method, self.api_token, payload_data)
+
+    def get_offline_deals(self, miner_fid: str):
+        url = api_url + "/offline_deals/" + miner_fid + "?deal_status=ReadyForImport&limit=20&offset=0"
+        get_offline_deals_method = "GET"
+        try:
+            response = send_http_request(url, get_offline_deals_method, self.api_token, None)
+            return response["deal"]
+        except Exception as e:
+            return e
+
+    def update_offline_deal_status(self, status: str, note: str, task_id: str, deal_cid: str):
+        url = api_url + "/my_miner/tasks/" + task_id + "/deals/" + deal_cid
+        update_offline_deal_status_method = "PUT"
+        body = {"status": status, "note": note}
+        send_http_request(url, update_offline_deal_status_method, self.api_token, body)
 
 
 def send_http_request(url, method, token, payload, file=None):
@@ -92,7 +107,7 @@ def send_http_request(url, method, token, payload, file=None):
             raise Exception("response code %s " % r.status_code)
         else:
             json_body = r.json()
-            if json_body['status'] != 'success':
+            if json_body['status'] != 'success' and json_body['status'] != 'Success':
                 raise Exception("response status failed")
             else:
                 return json_body['data']
