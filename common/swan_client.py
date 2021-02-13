@@ -5,13 +5,15 @@ import os
 import requests
 
 from common.Miner import Miner
+from common.config import read_config
 
-api_url = "https://preapiswan.nbfspool.com"
 
 # task type
 task_type_verified = "verified"
 task_type_regular = "regular"
 
+config = read_config()
+api_url = config['main']['api_url']
 
 class SwanTask:
     def __init__(self, task_name: str, is_public: bool, is_verified: bool):
