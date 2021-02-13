@@ -10,9 +10,9 @@ and start importing deals automatically once the files are downloaded.
 
 Edit config.toml
 
-- **api_url:** Swan API address. For more information please visit https://www.filswan.com/swagger.html
+- **api_url:** Swan API address.
 - **miner_fid:** Filecoin Miner ID
-- **expected_sealing_time:** The time expected for sealing deals. 
+- **expected_sealing_time:** The time expected for sealing deals. Deals starting too soon will be rejected.
 - **import_interval:** Importing interval between each deal.
 - **api_key & access_token:** Acquire from swan -> my profile
 
