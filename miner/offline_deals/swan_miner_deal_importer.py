@@ -86,8 +86,7 @@ if __name__ == '__main__':
             logger.info('')
             logger.info("Deal CID: %s. File Path: %s", deal["deal_cid"], deal["file_path"], )
 
-            # on_chain_status = get_deal_on_chain_status(deal["deal_cid"])
-            on_chain_status = ONCHAIN_DEAL_STATUS_ERROR
+            on_chain_status = get_deal_on_chain_status(deal["deal_cid"])
             if on_chain_status.startswith("StorageDeal") is False:
                 logger.error(on_chain_status)
                 logger.error("Failed to get deal on chain status, please check if lotus-miner is running properly.")
