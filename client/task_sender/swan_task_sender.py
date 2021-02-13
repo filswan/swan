@@ -9,8 +9,8 @@ from os.path import isfile, join
 from pathlib import Path
 from typing import List
 
-from client.common.config import read_config
-from client.common.swan_client import SwanClient, SwanTask
+from common.config import read_config
+from common.swan_client import SwanClient, SwanTask
 
 
 def checksum(filename, hash_factory=hashlib.md5, chunk_num_blocks=128):

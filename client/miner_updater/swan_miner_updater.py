@@ -1,8 +1,8 @@
 import sys
 
-from client.common.Miner import Miner
-from client.common.config import read_config
-from client.common.swan_client import SwanClient
+from common.Miner import Miner
+from common.config import read_config
+from common.swan_client import SwanClient
 
 if __name__ == '__main__':
     miner_id = sys.argv[1]
