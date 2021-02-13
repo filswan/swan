@@ -77,8 +77,7 @@ class SwanClient:
             response = send_http_request(url, get_offline_deals_method, self.api_token, None)
             return response["deal"]
         except Exception as e:
-            logger.error(str(e))
-            return None
+            return e
 
     def update_offline_deal_status(self, status: str, note: str, task_id: str, deal_cid: str):
         url = api_url + "/my_miner/tasks/" + task_id + "/deals/" + deal_cid

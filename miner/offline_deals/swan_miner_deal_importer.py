@@ -68,7 +68,9 @@ if __name__ == '__main__':
     while True:
         client = SwanClient(api_key, access_token)
         deals = client.get_offline_deals(miner_fid)
-        if deals is None:
+        if deals is None or isinstance(deals, Exception):
+            if isinstance(deals, Exception):
+                logger.error(str(deals))
             logger.error("Failed to get offline deals.")
             logger.info("Sleeping...")
             time.sleep(import_interval)
