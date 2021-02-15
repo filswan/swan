@@ -1,12 +1,10 @@
 import json
 import logging
-import os
 
 import requests
 
 from common.Miner import Miner
 from common.config import read_config
-
 
 # task type
 task_type_verified = "verified"
@@ -52,7 +50,6 @@ class SwanClient:
             self.api_token = resp_data['jwt']
         except Exception as e:
             logging.info(str(e))
-            os._exit(1)
 
     def post_task(self, task: SwanTask, csv):
         create_task_url_suffix = '/tasks'
