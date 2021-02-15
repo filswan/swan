@@ -106,7 +106,7 @@ def send_http_request(url, method, token, payload, file=None):
     with requests.request(url=url, method=method, headers=headers, data=payload, files=payload_file) as r:
 
         if r.status_code >= 400:
-            raise Exception("response code %s " % r.status_code)
+            raise Exception("response code %s, %s" % (r.status_code,json.loads(r.text).get("message")))
         else:
             json_body = r.json()
             if json_body['status'] != 'success' and json_body['status'] != 'Success':
