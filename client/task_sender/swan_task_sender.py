@@ -1,13 +1,15 @@
 import csv
 import os
+import sys
 import time
 from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 from typing import List
 
-from client.task_sender.service.file_process import checksum, stage_one
+sys.path.append("../")
 from common.OfflineDeal import OfflineDeal
+from .service.file_process import checksum, stage_one
 from common.config import read_config
 from common.swan_client import SwanClient, SwanTask
 

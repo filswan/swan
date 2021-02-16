@@ -3,7 +3,7 @@ import os
 import random
 import string
 
-from client.task_sender.swan_task_sender import create_new_task
+from task_sender.swan_task_sender import create_new_task
 
 
 def random_hash(length=6):
