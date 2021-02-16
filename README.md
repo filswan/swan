@@ -1,4 +1,12 @@
-# Instruction
+# Swan Client
+## Want to use this project?
+
+### Basics
+
+1. Fork/Clone
+1. Activate a virtualenv
+1. Install the requirements
+
 ## Offline Deal
 ### Prepare files for Offline Deal
 https://docs.filecoin.io/store/lotus/very-large-files/#maximizing-storage-per-sector
