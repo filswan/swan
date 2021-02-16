@@ -76,12 +76,12 @@ if __name__ == '__main__':
     else:
         config_path = None
     config = read_config(config_path)
-    output_dir = config['main']['output_dir']
-    download_url_prefix = config['main']['download_url_prefix']
-    is_public = config['main']['is_public']
-    is_verified = config['main']['is_verified']
-    generate_md5 = config['main']['generate_md5']
-    offline_mode = config['main']['offline_mode']
+    output_dir = config['sender']['output_dir']
+    download_url_prefix = config['sender']['download_url_prefix']
+    is_public = config['sender']['is_public']
+    is_verified = config['sender']['is_verified']
+    generate_md5 = config['sender']['generate_md5']
+    offline_mode = config['sender']['offline_mode']
 
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']

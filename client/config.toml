@@ -1,4 +1,8 @@
 [main]
+api_key = ""
+access_token = ""
+
+[sender]
 offline_mode = false
 output_dir = "/tmp/tasks"
 api_url = ""
@@ -6,5 +10,3 @@ download_url_prefix = "http://download"
 is_public = true
 is_verified = true
 generate_md5 = false
-api_key = ""
-access_token = ""
