@@ -1,6 +1,5 @@
 import csv
 import os
-import sys
 import time
 from os import listdir
 from os.path import isfile, join
@@ -58,7 +57,7 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
 
 def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_dir: str):
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
-    _csv_path = os.path.join(_out_dir, "%s-metadata-%s.csv" % (task.task_name, str(int(time.time()))))
+    _csv_path = os.path.join(_out_dir, "%s-metadata-%s.csv" % (_task.task_name, str(int(time.time()))))
 
     with open(_csv_path, "a") as csv_file:
         fieldnames = attributes
@@ -68,13 +67,7 @@ def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_d
             csv_writer.writerow(_deal.__dict__)
 
 
-if __name__ == '__main__':
-    input_dir = sys.argv[1]
-    task_name = str(sys.argv[2])
-    if len(sys.argv) == 4:
-        config_path = sys.argv[3]
-    else:
-        config_path = None
+def create_new_task(input_dir, config_path, task_name):
     config = read_config(config_path)
     output_dir = config['sender']['output_dir']
     download_url_prefix = config['sender']['download_url_prefix']
