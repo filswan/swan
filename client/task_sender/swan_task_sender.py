@@ -1,17 +1,15 @@
 import csv
 import os
-import sys
 import time
 from os import listdir
 from os.path import isfile, join
 from pathlib import Path
 from typing import List
 
-sys.path.append("../")
 from common.OfflineDeal import OfflineDeal
-from .service.file_process import checksum, stage_one
 from common.config import read_config
 from common.swan_client import SwanClient, SwanTask
+from .service.file_process import checksum, stage_one
 
 
 def read_file_path_in_dir(dir_path: str) -> List[str]:
