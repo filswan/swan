@@ -80,12 +80,19 @@ class SwanClient:
         except Exception as e:
             return e
 
-    def update_offline_deal_status(self, status: str, note: str, task_id: str, deal_cid: str, file_path=None, file_size=None):
+    def update_offline_deal_status(self, status: str, note: str, task_id: str, deal_cid: str):
         url = api_url + "/my_miner/tasks/" + task_id + "/deals/" + deal_cid
         update_offline_deal_status_method = "PUT"
-        body = {"status": status, "note": note, "file_path": file_path, "file_size": file_size}
+        body = {"status": status, "note": note}
 
         send_http_request(url, update_offline_deal_status_method, self.api_token, body)
+
+    def update_offline_deal_details(self, status: str, note: str, deal_id, file_path=None, file_size=None):
+        url = api_url + "/my_miner/deals/" + str(deal_id)
+        update_offline_deal_details_method = "PUT"
+        body = {"status": status, "note": note, "file_path": file_path, "file_size": file_size}
+
+        send_http_request(url, update_offline_deal_details_method, self.api_token, body)
 
 
 def send_http_request(url, method, token, payload, file=None):

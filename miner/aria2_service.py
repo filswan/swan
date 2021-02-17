@@ -50,9 +50,9 @@ def is_completed(_task):
         return success
     return failed
 
-def update_offline_deal_status(status: str, note: str, task_id: str, deal_cid: str, file_path=None, file_size=None):
+def update_offline_deal_details(status: str, note: str, deal_id: str, file_path=None, file_size=None):
     try:
-        client.update_offline_deal_status(status, note, task_id, deal_cid, file_path, file_size)
+        client.update_offline_deal_details(status, note, deal_id, file_path, file_size)
     except Exception as e:
         logging.error("Failed to update offline deal status.")
         logging.error(str(e))
@@ -91,8 +91,8 @@ def start_download_for_deal(deal, client: Aria2c):
     except Exception as e:
         logging.error("Failed to download deal.")
         logging.error(e)
-        update_offline_deal_status(DEAL_DOWNLOAD_FAILED_STATUS, str(deal["task_id"]), deal["deal_cid"])
-
+        update_offline_deal_details(DEAL_DOWNLOAD_FAILED_STATUS, deal["id"])
+        
         return
 
     gid = resp['result']
@@ -103,7 +103,7 @@ def start_download_for_deal(deal, client: Aria2c):
     except Exception as e:
         logging.error(e)
         note = "failed to start download %s" % e
-        update_offline_deal_status(DEAL_DOWNLOAD_FAILED_STATUS, note, str(deal["task_id"]), deal["deal_cid"])
+        update_offline_deal_details(DEAL_DOWNLOAD_FAILED_STATUS, note, deal["id"])
         return
 
     files = resp['result']['files']
@@ -114,7 +114,7 @@ def start_download_for_deal(deal, client: Aria2c):
         return
 
     file_path = path
-    update_offline_deal_status(DEAL_DOWNLOADING_STATUS, gid, str(deal["task_id"]), deal["deal_cid"], file_path=file_path)
+    update_offline_deal_details(DEAL_DOWNLOADING_STATUS, gid, deal["id"], file_path=file_path)
 
 def check_download_status(client: Aria2c):
     try:
@@ -162,8 +162,8 @@ def check_download_status(client: Aria2c):
 
             if new_status != current_status:
 
-                logging.info("deal cid %s status %s -> %s" % (deal.get("deal_cid"), current_status, new_status))
-                update_offline_deal_status(new_status, note, str(deal["task_id"]), deal["deal_cid"], file_size=file_size)
+                logging.info("deal id %s status %s -> %s" % (deal.get("id"), current_status, new_status))
+                update_offline_deal_details(new_status, note, deal["id"], file_size=file_size)
 
     except Exception as e:
         logging.error("Failed to check download status.")
