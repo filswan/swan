@@ -33,7 +33,6 @@ ARIA2_TASK_ACTIVE_STATUS = "active"
 ARIA2_TASK_COMPLETE_STATUS = "complete"
 
 
-
 def is_completed(_task):
     COMPLETE_STATUS = ARIA2_TASK_COMPLETE_STATUS
 
@@ -50,12 +49,14 @@ def is_completed(_task):
         return success
     return failed
 
+
 def update_offline_deal_details(status: str, note: str, deal_id: str, file_path=None, file_size=None):
     try:
         client.update_offline_deal_details(status, note, deal_id, file_path, file_size)
     except Exception as e:
         logging.error("Failed to update offline deal status.")
         logging.error(str(e))
+
 
 def find_next_deal_ready_to_download(miner_fid: str):
     try:
@@ -85,14 +86,14 @@ def start_download_for_deal(deal, client: Aria2c):
     filename = os.path.basename(urlparse(file_resource_url).path)
     today = date.today()
     option = {"out": filename,
-              "dir": OUT_DIR + str(deal.get("user_id")) + '/' + today.strftime("%Y%m%d")}
+              "dir": OUT_DIR + str(deal.get("user_id")) + '/' + today.strftime("%Y%m")}
     try:
         resp = json.loads(client.addUri(file_resource_url, option))
     except Exception as e:
         logging.error("Failed to download deal.")
         logging.error(e)
         update_offline_deal_details(DEAL_DOWNLOAD_FAILED_STATUS, deal["id"])
-        
+
         return
 
     gid = resp['result']
@@ -116,9 +117,10 @@ def start_download_for_deal(deal, client: Aria2c):
     file_path = path
     update_offline_deal_details(DEAL_DOWNLOADING_STATUS, gid, deal["id"], file_path=file_path)
 
+
 def check_download_status(client: Aria2c):
     try:
-        note=""
+        note = ""
         file_size = 0
         downloading_deals = find_deals_by_status(DEAL_DOWNLOADING_STATUS, miner_fid)
 
@@ -161,7 +163,6 @@ def check_download_status(client: Aria2c):
                 note = "download gid not found in offline_deals.note"
 
             if new_status != current_status:
-
                 logging.info("deal id %s status %s -> %s" % (deal.get("id"), current_status, new_status))
                 update_offline_deal_details(new_status, note, deal["id"], file_size=file_size)
 
