@@ -18,12 +18,19 @@ EPOCH_PER_HOUR = 120
 # 32GB
 # PIECE_SIZE = '34091302912'
 
-class DealConf:
+class DealConfig:
     miner_id = None
     sender_wallet = None
     max_price = None
     is_verified_deal = None
     epoch_interval_hours = None
+
+    def __init__(self, miner_id, sender_wallet, max_price, is_verified_deal, epoch_interval_hours):
+        self.miner_id = miner_id
+        self.sender_wallet = sender_wallet
+        self.max_price = max_price
+        self.is_verified_deal = is_verified_deal
+        self.epoch_interval_hours = epoch_interval_hours
 
 
 def get_current_epoch_by_current_time():
@@ -63,7 +70,7 @@ def get_miner_price(miner_fid: str):
                 'verified_price': verified_price}
 
 
-def propose_offline_deal(_price, piece_size, data_cid, piece_cid, deal_conf: DealConf):
+def propose_offline_deal(_price, piece_size, data_cid, piece_cid, deal_conf: DealConfig):
     start_epoch = get_current_epoch_by_current_time() + (deal_conf.epoch_interval_hours + 1) * EPOCH_PER_HOUR
     command = ['lotus', 'client', 'deal', '--from', deal_conf.sender_wallet, '--start-epoch', str(start_epoch),
                '--manual-piece-cid', piece_cid, '--manual-piece-size', piece_size, data_cid, deal_conf.miner_id, _price,
@@ -90,7 +97,7 @@ def calculate_piece_size_from_file_size(_file_size):
     return real_piece_size
 
 
-def send_deals_to_miner(deal_conf: DealConf, csv_file_path=None, deal_list=None):
+def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=None):
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
 
     # todo init csv_file_path when deals are from deal_list
