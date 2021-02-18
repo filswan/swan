@@ -1,3 +1,8 @@
+### Prerequisite
+
+- **lotus** https://docs.filecoin.io/get-started/lotus/installation/ (node is NOT necessarily to be synced)
+- python3, pip
+
 ### Install requirements
 
 At dir client/task_sender, run
@@ -19,5 +24,5 @@ Edit config.toml
 
     python3 swan_task_sender.py input_dir task_name [config_path]
 
-- **input_dir:**    all files in this fold (not in subforlders) will be used
+- **input_dir:** all files in this fold (not in subforlders) will be used
 - **config_path (optional):** use external config file (default: client/task_sender)
