@@ -4,14 +4,11 @@ import logging
 import requests
 
 from common.Miner import Miner
-from common.config import read_config
 
 # task type
 task_type_verified = "verified"
 task_type_regular = "regular"
 
-config = read_config()
-api_url = config['main']['api_url']
 
 class SwanTask:
     def __init__(self, task_name: str, is_public: bool, is_verified: bool):
@@ -30,7 +27,7 @@ class SwanTask:
 class SwanClient:
     api_token = None
 
-    def __init__(self, api_key, access_token):
+    def __init__(self, api_url, api_key, access_token):
         self.api_url = api_url
         self.api_key = api_key
         self.access_token = access_token
@@ -40,7 +37,7 @@ class SwanClient:
         refresh_api_token_suffix = "/user/api_keys/jwt"
         refresh_api_token_method = 'POST'
 
-        refresh_token_url = api_url + refresh_api_token_suffix
+        refresh_token_url = self.api_url + refresh_api_token_suffix
         data = {
             "apikey": self.api_key,
             "access_token": self.access_token
@@ -55,7 +52,7 @@ class SwanClient:
         create_task_url_suffix = '/tasks'
         create_task_method = 'POST'
 
-        create_task_url = api_url + create_task_url_suffix
+        create_task_url = self.api_url + create_task_url_suffix
         payload_data = task.to_request_dict()
 
         send_http_request(create_task_url, create_task_method, self.api_token, payload_data, file=csv)
@@ -64,13 +61,13 @@ class SwanClient:
         update_miner_url_suffix = '/miners/%s/status' % miner.miner_id
         update_miner_method = 'PUT'
 
-        update_miner_url = api_url + update_miner_url_suffix
+        update_miner_url = self.api_url + update_miner_url_suffix
         payload_data = json.dumps(miner.to_request_dict())
 
-        send_http_request(update_miner_url, update_miner_method, self.api_token, payload_data)
+        return send_http_request(update_miner_url, update_miner_method, self.api_token, payload_data)
 
     def get_offline_deals(self, miner_fid: str):
-        url = api_url + "/offline_deals/" + miner_fid + "?deal_status=ReadyForImport&limit=20&offset=0"
+        url = self.api_url + "/offline_deals/" + miner_fid + "?deal_status=ReadyForImport&limit=20&offset=0"
         get_offline_deals_method = "GET"
         try:
             response = send_http_request(url, get_offline_deals_method, self.api_token, None)
@@ -79,7 +76,7 @@ class SwanClient:
             return e
 
     def update_offline_deal_status(self, status: str, note: str, task_id: str, deal_cid: str):
-        url = api_url + "/my_miner/tasks/" + task_id + "/deals/" + deal_cid
+        url = self.api_url + "/my_miner/tasks/" + task_id + "/deals/" + deal_cid
         update_offline_deal_status_method = "PUT"
         body = {"status": status, "note": note}
         send_http_request(url, update_offline_deal_status_method, self.api_token, body)

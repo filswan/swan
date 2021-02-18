@@ -76,6 +76,7 @@ def create_new_task(input_dir, config_path, task_name):
     generate_md5 = config['sender']['generate_md5']
     offline_mode = config['sender']['offline_mode']
 
+    api_url = config['main']['api_url']
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
 
@@ -112,7 +113,7 @@ def create_new_task(input_dir, config_path, task_name):
     if offline_mode:
         client = None
     else:
-        client = SwanClient(api_key, access_token)
+        client = SwanClient(api_url, api_key, access_token)
 
     task = SwanTask(
         task_name=task_name,
