@@ -121,7 +121,7 @@ def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=Non
 
         data_cid = _deal.data_cid
         piece_cid = _deal.piece_cid
-        source_file_url = _deal.source_file_url
+        source_file_url = _deal.car_file_url
         md5 = _deal.car_file_md5
         file_size = _deal.source_file_size
         prices = get_miner_price(deal_conf.miner_id)
@@ -138,8 +138,11 @@ def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=Non
             logging.warning(
                 "miner %s price %s higher than max price %s" % (deal_conf.miner_id, price, deal_conf.max_price))
             continue
-
-        piece_size = str(calculate_piece_size_from_file_size(file_size))
+        if int(file_size) > 0:
+            piece_size = str(calculate_piece_size_from_file_size(file_size))
+        else:
+            logging.error("file %s is too small" % _deal.source_file_name)
+            continue
 
         # todo price here is price/Gb, need to calculate according to sector size
         result = propose_offline_deal(price, piece_size, data_cid, piece_cid, deal_conf)
