@@ -58,7 +58,6 @@ def get_miner_price(miner_fid: str):
         lines = proc.rstrip().decode('utf-8').split('\n')
 
         for line in lines:
-            logging.info('----- info: %s' % line)
             price_match = re.findall(r'''^Price per GiB: ([0-9]*\.?[0-9]+) FIL''', line)
             if len(price_match) != 0:
                 price = price_match[0]
@@ -76,6 +75,9 @@ def propose_offline_deal(_price, piece_size, data_cid, piece_cid, deal_conf: Dea
                '--manual-piece-cid', piece_cid, '--manual-piece-size', piece_size, data_cid, deal_conf.miner_id, _price,
                DURATION]
     logging.info(command)
+    logging.info("wallet: %s" % deal_conf.sender_wallet)
+    logging.info("miner: %s" % deal_conf.miner_id)
+    logging.info("price: %s" % _price)
     input("Press Enter to continue...")
     proc = subprocess.Popen(command, stdout=subprocess.PIPE)
     resp = proc.stdout.readline().rstrip().decode('utf-8')
