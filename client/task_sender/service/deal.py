@@ -164,7 +164,7 @@ def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=Non
 
         file_exists = os.path.isfile(output_csv_path)
         with open(output_csv_path, "a") as output_csv_file:
-            output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid', 'timestamp']
+            output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
             csv_writer = csv.DictWriter(output_csv_file, delimiter=',', fieldnames=output_fieldnames)
             if not file_exists:
                 csv_writer.writeheader()
@@ -173,7 +173,6 @@ def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=Non
                 'file_source_url': source_file_url,
                 'md5': md5,
                 'start_epoch': _start_epoch,
-                'deal_cid': _deal_cid,
-                'timestamp': int(time.time() * 1000)
+                'deal_cid': _deal_cid
             }
             csv_writer.writerow(csv_data)
