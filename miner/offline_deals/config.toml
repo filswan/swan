@@ -1,7 +1,0 @@
-[main]
-api_url = ""
-miner_fid = 'f0xxxx'
-expected_sealing_time = 1920    # 1920 epoch or 16 hours
-import_interval = 600           # 600 seconds or 10 minutes
-api_key = ""
-access_token = ""
