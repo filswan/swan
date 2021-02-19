@@ -1,0 +1,2 @@
+uid,source_file_name,source_file_path,source_file_md5,source_file_url,source_file_size,car_file_name,car_file_path,car_file_md5,car_file_url,car_file_size,deal_cid,data_cid,piece_cid,miner_id,start_epoch
+,test.txt,/home/tester/test.txt,,,1496,swan_cli.py.car,/tmp/tasks/swan_cli.py.car,,http://download/swan_cli.py.car,1597,,bafk2bzacedacxf6gzwtmigvaiieam6luxsonvtjyn654wfiq4tfs4zkjh3hx2,baga6ea4seaqlyyvhj3hhnvi5nft66pvnteagiwp3y5aprxlwxj6xq2kbf7x4ukq,,

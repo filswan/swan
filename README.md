@@ -1,4 +1,12 @@
-# Instruction
+# Swan Client
+## Want to use this project?
+
+### Basics
+
+1. Fork/Clone
+1. Activate a virtualenv
+1. Install the requirements
+
 ## Offline Deal
 ### Prepare files for Offline Deal
 https://docs.filecoin.io/store/lotus/very-large-files/#maximizing-storage-per-sector
@@ -32,13 +40,13 @@ For fields you don't know, please add the '', e.g.  f019104,bafy2bzacebikhvpxget
 
 There are two ways of uploading files:
 
-* One-stage Upload
-Complete step  **Generate a unique piece CID**, **Propose an offline deal**,  **Prepare CSV for Offline Sealing**
-  * upload the csv with deal_cid 
+* One-stage Upload Complete step  **Generate a unique piece CID**, **Propose an offline deal**,  **Prepare CSV for
+  Offline Sealing**
+    * upload the csv with deal_cid
 
 * Two-stage Upload
-  * stage1: Complete step  **Generate a unique piece CID** , **upload the csv with deal_id empty**
-  * stage2:  Complete step  **Prepare CSV for Offline Sealing**, re-upload the csv with deal_id
+    * stage1: Complete step  **Generate a unique piece CID** , **upload the csv with deal_id empty**
+    * stage2:  Complete step  **Prepare CSV for Offline Sealing**, re-upload the csv with deal_id
 
 
 miner_id(mandatory) : miner you want to send the deal

@@ -1,11 +1,21 @@
+## Getting Started
+This tool will listen to the new tasks assigned to your miner from the Swan platform, 
+and start importing deals automatically once the files are downloaded.
 
-# For miners accept deals
+### Prerequisites
 
-A list of trusted miners by region
+    pip3 install -r offline_deals/requirements.txt 
 
-NBFS Canada get 5Tb Datacap from Filecoin plus project. As orgnizatin located in North America, NBFS would like to allocate the data to miners in NA and EU.
+### Config
 
-Please add a pull request to trusted_miner.csv so we can add you to our next sending list.
+Edit config.toml
 
-Thanks.
+- **api_url:** Swan API address. For Swan production, it is "https://api.filswan.com"
+- **miner_fid:** Your filecoin Miner ID
+- **expected_sealing_time:** The time expected for sealing deals. Deals starting too soon will be rejected.
+- **import_interval:** Importing interval between each deal.
+- **api_key & access_token:** Acquire from swan -> my profile Guide:https://nebulaai.medium.com/how-to-use-api-key-in-swan-a2ebdb005aa4
 
+### Run
+
+    cd offline_deals && python3 swan_miner_deal_importer.py
