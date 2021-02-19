@@ -5,7 +5,7 @@ and start importing deals automatically once the files are downloaded.
 ### Prerequisites
     
     sudo apt install python3-pip
-    pip3 install -r offline_deals/requirements.txt 
+    pip3 install -r requirements.txt 
     sudo apt install aria2
 
 ### Config
