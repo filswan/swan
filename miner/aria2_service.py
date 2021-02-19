@@ -18,10 +18,11 @@ from aria2c import Aria2c
 
 config = read_config()
 OUT_DIR = config['aria2']['aria2_download_dir']
+api_url = config['main']['api_url']
 api_key = config['main']['api_key']
 access_token = config['main']['access_token']
 miner_fid = config['main']['miner_fid']
-client = SwanClient(api_key, access_token)
+client = SwanClient(api_url, api_key, access_token)
 
 DEAL_DOWNLOADING_STATUS = 'Downloading'
 DEAL_DOWNLOADED_STATUS = 'Downloaded'

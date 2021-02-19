@@ -1,12 +1,12 @@
 [main]
-api_url = "https://api.filswan.com"
-miner_fid = "f0xxxx"
+api_url = "http://192.168.0.154:5001"
+miner_fid = "f08000"
 expected_sealing_time = 1920    # 1920 epoch or 16 hours
 import_interval = 600           # 600 seconds or 10 minutes
-api_key = ""
-access_token = ""
+api_key = "M2EL0-9JulQ5j_Dbm3h-Tg"
+access_token = "f6e9282d439521c58c16e723e9bda1e7"
 [aria2]
-aria2_download_dir = "/path/to/download/"
+aria2_download_dir = "/home/boqian/Downloads/test_aria2/"
 aria2_conf = "./aria2.conf"
 aria2_host = "localhost"
 aria2_port = "6800"
