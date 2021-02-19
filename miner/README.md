@@ -3,8 +3,9 @@ This tool will listen to the new tasks assigned to your miner from the Swan plat
 and start importing deals automatically once the files are downloaded.
 
 ### Prerequisites
-
-    pip3 install -r offline_deals/requirements.txt 
+    
+    sudo apt install python3-pip
+    pip3 install -r requirements.txt 
     sudo apt install aria2
 
 ### Config

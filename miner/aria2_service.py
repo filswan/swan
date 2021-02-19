@@ -8,8 +8,6 @@ from datetime import date
 from typing import List
 from urllib.parse import urlparse
 
-from sqlalchemy import or_
-
 sys.path.append("../")
 from common.config import read_config
 from common.swan_client import SwanClient
