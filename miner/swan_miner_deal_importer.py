@@ -132,15 +132,15 @@ if __name__ == '__main__':
                 time.sleep(import_interval)
                 break
 
-            logger.info("Current epoch: %s. Deal starting epoch: %s", current_epoch, deal.start_epoch)
+            logger.info("Current epoch: %s. Deal starting epoch: %s", current_epoch, deal.get("start_epoch"))
             try:
-                if deal.start_epoch - current_epoch < expected_sealing_time:
+                if deal.get("start_epoch") - current_epoch < expected_sealing_time:
                     logger.info("Deal will start too soon. Do not import this deal.")
                     note = "Deal expired."
                     update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["task_id"]), deal["deal_cid"])
                     continue
 
-                command = "lotus-miner storage-deals import-data " + deal.deal_cid + " " + deal.file_path
+                command = "lotus-miner storage-deals import-data " + deal.get("deal_cid") + " " + deal.get("file_path")
                 logger.info('Command: %s' % command)
 
                 note = ""
