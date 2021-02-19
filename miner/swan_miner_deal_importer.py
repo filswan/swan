@@ -3,6 +3,7 @@ import re
 import subprocess
 import sys
 import time
+
 sys.path.append("../")
 from common.config import read_config
 from common.swan_client import SwanClient
@@ -67,6 +68,7 @@ if __name__ == '__main__':
     while True:
         client = SwanClient(api_url, api_key, access_token)
         deals = client.get_offline_deals(miner_fid, DEAL_STATUS_READY, IMPORT_NUMNBER)
+
         if deals is None or isinstance(deals, Exception):
             if isinstance(deals, Exception):
                 logger.error(str(deals))

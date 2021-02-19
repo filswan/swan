@@ -68,6 +68,7 @@ class SwanClient:
 
     def get_offline_deals(self, miner_fid: str, status: str, limit: int):
         url = self.api_url + "/offline_deals/" + miner_fid + "?deal_status=" + status + "&limit=" + limit + "&offset=0"
+
         get_offline_deals_method = "GET"
         try:
             response = send_http_request(url, get_offline_deals_method, self.api_token, None)
