@@ -8,7 +8,6 @@ from aria2c import Aria2c
 from aria2_service import check_download_status, start_downloading
 import subprocess
 
-sys.path.append("../")
 from common.config import read_config
 
 
