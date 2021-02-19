@@ -1,10 +1,15 @@
 [main]
+api_key = ""
+access_token = ""
+api_url = ""
+
+[sender]
 offline_mode = false
 output_dir = "/tmp/tasks"
-api_url = ""
 download_url_prefix = "http://download"
 is_public = true
 is_verified = true
 generate_md5 = false
-api_key = ""
-access_token = ""
+wallet = ""
+max_price = "0"
+epoch_interval_hours = 96

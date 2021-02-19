@@ -1,14 +1,10 @@
 import logging.config
-import requests
-import sys
-import os
-import subprocess
 import re
-import time
-from datetime import datetime
+import subprocess
 import sys
+import time
 
-sys.path.append("../")
+sys.path.append("../../")
 from common.config import read_config
 from common.swan_client import SwanClient
 
@@ -59,6 +55,7 @@ def update_offline_deal_status(status: str, note: str, task_id: str, deal_cid: s
 if __name__ == '__main__':
 
     config = read_config()
+    api_url = config['main']['api_url']
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
     import_interval = config['main']['import_interval']
@@ -66,8 +63,8 @@ if __name__ == '__main__':
     miner_fid = config['main']['miner_fid']
 
     while True:
-        client = SwanClient(api_key, access_token)
-        deals = client.get_offline_deals(miner_fid, DEAL_STATUS_READY, str(20))
+        client = SwanClient(api_url, api_key, access_token)
+        deals = client.get_offline_deals(miner_fid)
         if deals is None or isinstance(deals, Exception):
             if isinstance(deals, Exception):
                 logger.error(str(deals))
