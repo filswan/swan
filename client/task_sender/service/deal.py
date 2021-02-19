@@ -58,7 +58,6 @@ def get_miner_price(miner_fid: str):
         lines = proc.rstrip().decode('utf-8').split('\n')
 
         for line in lines:
-            logging.info('----- info: %s' % line)
             price_match = re.findall(r'''^Price per GiB: ([0-9]*\.?[0-9]+) FIL''', line)
             if len(price_match) != 0:
                 price = price_match[0]
@@ -70,12 +69,17 @@ def get_miner_price(miner_fid: str):
                 'verified_price': verified_price}
 
 
-def propose_offline_deal(_price, piece_size, data_cid, piece_cid, deal_conf: DealConfig):
+def propose_offline_deal(_price, _cost, piece_size, data_cid, piece_cid, deal_conf: DealConfig):
     start_epoch = get_current_epoch_by_current_time() + (deal_conf.epoch_interval_hours + 1) * EPOCH_PER_HOUR
     command = ['lotus', 'client', 'deal', '--from', deal_conf.sender_wallet, '--start-epoch', str(start_epoch),
-               '--manual-piece-cid', piece_cid, '--manual-piece-size', piece_size, data_cid, deal_conf.miner_id, _price,
+               '--manual-piece-cid', piece_cid, '--manual-piece-size', piece_size, data_cid, deal_conf.miner_id, _cost,
                DURATION]
     logging.info(command)
+    logging.info("wallet: %s" % deal_conf.sender_wallet)
+    logging.info("miner: %s" % deal_conf.miner_id)
+    logging.info("price: %s" % _price)
+    logging.info("total cost: %s" % _cost)
+    logging.info("start epoch: %s" % start_epoch)
     input("Press Enter to continue...")
     proc = subprocess.Popen(command, stdout=subprocess.PIPE)
     resp = proc.stdout.readline().rstrip().decode('utf-8')
@@ -94,7 +98,15 @@ def calculate_piece_size_from_file_size(_file_size):
         exp = exp + 1
     real_sector_size = 2 ** exp
     real_piece_size = int(real_sector_size * 254 / 256)
-    return real_piece_size
+    return real_piece_size, real_sector_size
+
+
+def calculate_real_cost(sector_size_bytes, price_per_GiB):
+    bytes_per_GiB = 1024 * 1024 * 1024
+    sector_size_in_GiB = Decimal(sector_size_bytes) / Decimal(bytes_per_GiB)
+
+    real_cost = sector_size_in_GiB * Decimal(price_per_GiB)
+    return real_cost
 
 
 def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=None):
@@ -121,7 +133,7 @@ def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=Non
 
         data_cid = _deal.data_cid
         piece_cid = _deal.piece_cid
-        source_file_url = _deal.source_file_url
+        source_file_url = _deal.car_file_url
         md5 = _deal.car_file_md5
         file_size = _deal.source_file_size
         prices = get_miner_price(deal_conf.miner_id)
@@ -138,11 +150,15 @@ def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=Non
             logging.warning(
                 "miner %s price %s higher than max price %s" % (deal_conf.miner_id, price, deal_conf.max_price))
             continue
+        if int(file_size) > 0:
+            piece_size, sector_size = calculate_piece_size_from_file_size(file_size)
+        else:
+            logging.error("file %s is too small" % _deal.source_file_name)
+            continue
 
-        piece_size = str(calculate_piece_size_from_file_size(file_size))
+        cost = calculate_real_cost(sector_size, price)
 
-        # todo price here is price/Gb, need to calculate according to sector size
-        result = propose_offline_deal(price, piece_size, data_cid, piece_cid, deal_conf)
+        result = propose_offline_deal(price, str(cost), str(piece_size), data_cid, piece_cid, deal_conf)
         _deal_cid = result[0]
         _start_epoch = result[1]
 
