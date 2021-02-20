@@ -22,7 +22,7 @@ ONCHAIN_DEAL_STATUS_ACTIVE = "StorageDealActive"
 ONCHAIN_DEAL_STATUS_NOTFOUND = "StorageDealNotFound"
 ONCHAIN_DEAL_STATUS_WAITTING = "StorageDealWaitingForData"
 
-# Number of deals to be imported at a time
+# Max number of deals to be imported at a time
 IMPORT_NUMNBER = "20"
 
 
