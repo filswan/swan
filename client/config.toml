@@ -6,10 +6,14 @@ api_url = "https://api.filswan.com"
 [sender]
 offline_mode = false
 output_dir = "/tmp/tasks"
-download_url_prefix = "http://download"
 is_public = true
 is_verified = true
 generate_md5 = false
 wallet = ""
 max_price = "0"
 epoch_interval_hours = 96
+
+[server]
+host = "https://nbai.io"
+port = 80
+path = "download"

@@ -19,7 +19,7 @@ def read_file_path_in_dir(dir_path: str) -> List[str]:
 
 
 def generate_csv_and_send(_task: SwanTask, _csv_data: List[dict], _output_dir: str, _client: SwanClient):
-    _csv_name = _task.task_name + str(int(time.time())) + ".csv"
+    _csv_name = _task.task_name + ".csv"
     _csv_path = os.path.join(_output_dir, _csv_name)
     with open(_csv_path, "a") as csv_file:
         fieldnames = ['miner_id', 'deal_cid', 'file_source_url', 'md5', 'start_epoch']
@@ -58,7 +58,7 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
 
 def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_dir: str):
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
-    _csv_path = os.path.join(_out_dir, "%s-metadata-%s.csv" % (_task.task_name, str(int(time.time()))))
+    _csv_path = os.path.join(_out_dir, "%s-metadata.csv" % _task.task_name)
 
     with open(_csv_path, "a") as csv_file:
         fieldnames = attributes
@@ -71,7 +71,6 @@ def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_d
 def create_new_task(input_dir, config_path, task_name, miner_id=None):
     config = read_config(config_path)
     output_dir = config['sender']['output_dir']
-    download_url_prefix = config['sender']['download_url_prefix']
     is_public = config['sender']['is_public']
     is_verified = config['sender']['is_verified']
     generate_md5 = config['sender']['generate_md5']
@@ -80,6 +79,18 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     api_url = config['main']['api_url']
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
+
+    host = config['server']['host']
+    port = config['server']['port']
+    path = config['server']['path']
+
+    download_url_prefix = str(host).rstrip("/")
+    if port == 80:
+        pass
+    else:
+        download_url_prefix = download_url_prefix + ":" + str(port)
+
+    download_url_prefix = os.path.join(download_url_prefix, path)
 
     if not is_public:
         if not miner_id:
