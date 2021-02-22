@@ -60,8 +60,7 @@ def update_offline_deal_status(status: str, note: str, task_id: str, deal_cid: s
         logger.error(str(e))
 
 
-if __name__ == '__main__':
-
+def scanner():
     config = read_config()
     api_url = config['main']['api_url']
     api_key = config['main']['api_key']

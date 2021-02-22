@@ -32,6 +32,5 @@ Edit config.toml
 - **aria2_secret:** Must be consistent with aria2_secret in aria2.conf
 
 ### Run
-    
-    python3 swan_miner_deal_downloader.py
-    python3 swan_miner_deal_importer.py
+
+    python3 swan_miner.py

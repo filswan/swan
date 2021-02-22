@@ -10,7 +10,6 @@ import subprocess
 
 from common.config import read_config
 
-
 config = read_config()
 MINER_FID = config['main']['miner_fid']
 ARIA2_HOTS = config['aria2']['aria2_host']
@@ -21,7 +20,8 @@ ARIA_CONF = config['aria2']['aria2_conf']
 client = Aria2c(ARIA2_HOTS, ARIA2_PORT, ARIA2_SECRET)
 MAX_DOWNLOADING_TASKS = 10
 
-if __name__ == '__main__':
+
+def downloader():
     subprocess.Popen(["aria2c", "--conf-path=" + ARIA_CONF])
     logging.info("Start check_download_status.... ")
     sched = BackgroundScheduler()
