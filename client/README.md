@@ -63,17 +63,17 @@ Command
 ```
     python3 swan_cli.py task --input input_file_dir --name task_name
 ```
--	--input  For each file under this directory will be converted to a car file, the generated car file will be located under the output folder defined in config.toml
--	--name  define task name used while creating task in swan platform, default: swan-task-<uuid>
+--input  For each file under this directory will be converted to a car file, the generated car file will be located under the output folder defined in config.toml
+--name  define task name used while creating task in swan platform, default: swan-task-<uuid>
 
-Two CSV files is generated after successfully running the command: swan-task-<uuid>.csv , swan-task-<uuid>-metadata.csv. They are under the output folder defined in config.toml.
+Two CSV files is generated after successfully running the command: swan-task-uuid.csv , swan-task-uuid-metadata.csv. They are under the output folder defined in config.toml.
 
 
-swan-task-<uuid>.csv is a CSV generated for post a public task or a task for pre-download in Swan platform 
+swan-task-uuid.csv is a CSV generated for post a public task or a task for pre-download in Swan platform 
 ```
 miner_id,deal_cid,file_source_url,md5,start_epoch
 ```
-Output metadata CSV is used for creating proposal in the next step
+Output metadata CSV wan-task-uuid-metadata.csv is used for creating proposal in the next step
 ```
 uid,source_file_name,source_file_path,source_file_md5,source_file_url,source_file_size,car_file_name,car_file_path,car_file_md5,car_file_url,car_file_size,deal_cid,data_cid,piece_cid,miner_id,start_epoch
 ```
@@ -88,5 +88,5 @@ To send offline deals to a miner, use the metadata CSV, generated in step 1.
 **--csv (Required):**  file path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid, piece_cid
 **--miner (Required):** target miner id for storage, e.g  f01276
 
-A csv with name swan-task-<uuid>-deals.csv is generated under the output directory, it contains the deal cid and miner id for miner process in Swan, you could re-upload this file to swan platform while assign bid to miner or do a private deal.
+A csv with name swan-task-uuid-deals.csv is generated under the output directory, it contains the deal cid and miner id for miner process in Swan, you could re-upload this file to swan platform while assign bid to miner or do a private deal.
 
