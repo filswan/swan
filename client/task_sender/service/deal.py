@@ -85,7 +85,7 @@ def propose_offline_deal(_price, _cost, piece_size, data_cid, piece_cid, deal_co
     resp = proc.stdout.readline().rstrip().decode('utf-8')
     deal_cid = resp
     logging.info('deal cid: %s, start epoch: %s' % (deal_cid, start_epoch))
-    return [deal_cid, start_epoch]
+    return deal_cid, start_epoch
 
 
 # https://docs.filecoin.io/store/lotus/very-large-files/#maximizing-storage-per-sector
@@ -109,11 +109,18 @@ def calculate_real_cost(sector_size_bytes, price_per_GiB):
     return real_cost
 
 
-def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=None):
+def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name, csv_file_path=None, deal_list=None):
+    result_deal_list = []
+
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
 
     # todo init csv_file_path when deals are from deal_list
-    output_csv_path = csv_file_path + ".output"
+    if csv_file_path:
+        csv_file_name = os.path.basename(csv_file_path)
+        output_csv_path = os.path.join(output_dir, csv_file_name + ".output")
+    else:
+        output_csv_path = os.path.join(output_dir, task_name + ".output")
+
     if deal_list:
         pass
     else:
@@ -158,13 +165,18 @@ def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=Non
 
         cost = calculate_real_cost(sector_size, price)
 
-        result = propose_offline_deal(price, str(cost), str(piece_size), data_cid, piece_cid, deal_conf)
-        _deal_cid = result[0]
-        _start_epoch = result[1]
+        _deal_cid, _start_epoch = propose_offline_deal(price, str(cost), str(piece_size), data_cid, piece_cid,
+                                                       deal_conf)
 
         file_exists = os.path.isfile(output_csv_path)
+
+        _deal.miner_id = deal_conf.miner_id
+        _deal.start_epoch = _start_epoch
+        _deal.deal_cid = _deal_cid
+
+        result_deal_list.append(_deal)
         with open(output_csv_path, "a") as output_csv_file:
-            output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid', 'timestamp']
+            output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
             csv_writer = csv.DictWriter(output_csv_file, delimiter=',', fieldnames=output_fieldnames)
             if not file_exists:
                 csv_writer.writeheader()
@@ -173,7 +185,6 @@ def send_deals_to_miner(deal_conf: DealConfig, csv_file_path=None, deal_list=Non
                 'file_source_url': source_file_url,
                 'md5': md5,
                 'start_epoch': _start_epoch,
-                'deal_cid': _deal_cid,
-                'timestamp': int(time.time() * 1000)
+                'deal_cid': _deal_cid
             }
             csv_writer.writerow(csv_data)

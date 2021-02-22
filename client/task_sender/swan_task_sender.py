@@ -9,6 +9,7 @@ from typing import List
 from common.OfflineDeal import OfflineDeal
 from common.config import read_config
 from common.swan_client import SwanClient, SwanTask
+from .deal_sender import send_deals
 from .service.file_process import checksum, stage_one
 
 
@@ -67,7 +68,7 @@ def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_d
             csv_writer.writerow(_deal.__dict__)
 
 
-def create_new_task(input_dir, config_path, task_name):
+def create_new_task(input_dir, config_path, task_name, miner_id=None):
     config = read_config(config_path)
     output_dir = config['sender']['output_dir']
     download_url_prefix = config['sender']['download_url_prefix']
@@ -79,6 +80,11 @@ def create_new_task(input_dir, config_path, task_name):
     api_url = config['main']['api_url']
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
+
+    if not is_public:
+        if not miner_id:
+            print('Please provide --miner')
+            exit(1)
 
     file_paths = read_file_path_in_dir(input_dir)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -109,6 +115,9 @@ def create_new_task(input_dir, config_path, task_name):
             'start_epoch': ""
         }
         csv_data_list.append(csv_data)
+
+    if not is_public:
+        send_deals(config_path, miner_id, task_name, deal_list=deal_list)
 
     if offline_mode:
         client = None

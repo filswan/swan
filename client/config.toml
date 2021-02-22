@@ -1,7 +1,7 @@
 [main]
 api_key = ""
 access_token = ""
-api_url = ""
+api_url = "https://api.filswan.com"
 
 [sender]
 offline_mode = false
