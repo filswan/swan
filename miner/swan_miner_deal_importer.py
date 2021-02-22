@@ -22,6 +22,12 @@ ONCHAIN_DEAL_STATUS_WAITTING = "StorageDealWaitingForData"
 # Max number of deals to be imported at a time
 IMPORT_NUMNBER = "20"
 
+config = read_config()
+api_url = config['main']['api_url']
+api_key = config['main']['api_key']
+access_token = config['main']['access_token']
+client = SwanClient(api_url, api_key, access_token)
+
 
 def get_deal_on_chain_status(deal_cid: str):
     cmd = "lotus-miner storage-deals list -v | grep " + deal_cid

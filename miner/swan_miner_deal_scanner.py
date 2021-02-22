@@ -28,6 +28,11 @@ ONCHAIN_DEAL_STATUS_AWAITING = "StorageDealAwaitingPreCommit"
 # Max number of deals to be scanned at a time
 SCAN_NUMNBER = "100"
 
+config = read_config()
+api_url = config['main']['api_url']
+api_key = config['main']['api_key']
+access_token = config['main']['access_token']
+client = SwanClient(api_url, api_key, access_token)
 
 class OfflineDealMessage:
 
