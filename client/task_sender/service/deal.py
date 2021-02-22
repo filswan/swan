@@ -110,8 +110,6 @@ def calculate_real_cost(sector_size_bytes, price_per_GiB):
 
 
 def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name, csv_file_path=None, deal_list=None):
-    result_deal_list = []
-
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
 
     # todo init csv_file_path when deals are from deal_list
@@ -174,17 +172,17 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name, csv_file_p
         _deal.start_epoch = _start_epoch
         _deal.deal_cid = _deal_cid
 
-        result_deal_list.append(_deal)
-        with open(output_csv_path, "a") as output_csv_file:
-            output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
-            csv_writer = csv.DictWriter(output_csv_file, delimiter=',', fieldnames=output_fieldnames)
-            if not file_exists:
-                csv_writer.writeheader()
+    with open(output_csv_path, "a") as output_csv_file:
+        output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
+        csv_writer = csv.DictWriter(output_csv_file, delimiter=',', fieldnames=output_fieldnames)
+        csv_writer.writeheader()
+
+        for deal in deal_list:
             csv_data = {
                 'miner_id': deal_conf.miner_id,
-                'file_source_url': source_file_url,
-                'md5': md5,
-                'start_epoch': _start_epoch,
-                'deal_cid': _deal_cid
+                'file_source_url': deal.car_file_url,
+                'md5': deal.car_file_md5,
+                'start_epoch': deal.start_epoch,
+                'deal_cid': deal.deal_cid
             }
             csv_writer.writerow(csv_data)
