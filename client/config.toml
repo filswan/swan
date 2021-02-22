@@ -2,6 +2,9 @@
 api_key = ""
 access_token = ""
 api_url = "https://api.filswan.com"
+host = "https://nbai.io"
+port = 443
+path = "/download"
 
 [sender]
 offline_mode = false
@@ -12,8 +15,3 @@ generate_md5 = false
 wallet = ""
 max_price = "0"
 epoch_interval_hours = 96
-
-[server]
-host = "https://nbai.io"
-port = 80
-path = "download"

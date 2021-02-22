@@ -79,10 +79,9 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     api_url = config['main']['api_url']
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
-
-    host = config['server']['host']
-    port = config['server']['port']
-    path = config['server']['path']
+    host = config['main']['host']
+    port = config['main']['port']
+    path = config['main']['path']
 
     download_url_prefix = str(host).rstrip("/")
     if port == 80:

@@ -112,12 +112,9 @@ def calculate_real_cost(sector_size_bytes, price_per_GiB):
 def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name, csv_file_path=None, deal_list=None):
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
 
-    # todo init csv_file_path when deals are from deal_list
-    if csv_file_path:
-        csv_file_name = os.path.basename(csv_file_path)
-        output_csv_path = os.path.join(output_dir, csv_file_name + ".output")
-    else:
-        output_csv_path = os.path.join(output_dir, task_name + ".output")
+    file_name_suffix = "-deals.csv"
+
+    output_csv_path = os.path.join(output_dir, task_name + file_name_suffix)
 
     if deal_list:
         pass
