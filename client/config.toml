@@ -14,4 +14,4 @@ is_verified = true
 generate_md5 = false
 wallet = ""
 max_price = "0"
-epoch_interval_hours = 96
+start_epoch_hours = 96
