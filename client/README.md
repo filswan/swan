@@ -1,34 +1,53 @@
 ### Prerequisite
 
-- **lotus** https://docs.filecoin.io/get-started/lotus/installation/ (node is NOT necessarily to be synced)
-- python3, pip
+- lotus node
+- python 3.7+ 
+- pip
 
-### Install requirements
+### Install python requirements
 
-At dir client, run
-
-    pip install -r requirements.txt 
+```
+pip install -r requirements.txt 
+```
 
 ### Config
 
-Edit config.toml
+In config.toml
+
+```
+[main]
+api_key = ""
+access_token = ""
+api_url = "https://api.filswan.com"
+
+[sender]
+offline_mode = false
+output_dir = "/tmp/tasks"
+download_url_prefix = "http://download.com/download"
+is_public = true
+is_verified = true
+generate_md5 = false
+wallet = ""
+max_price = "0"
+epoch_interval_hours = 96
+```
 
 #### main
-
-- **api_url, api_key & access_token:** acquire from swan -> my profile
+- **api_key**   Follow instuctions here https://nebulaai.medium.com/how-to-use-api-key-in-swan-a2ebdb005aa4
+- **access_token** Follow instuctions here https://nebulaai.medium.com/how-to-use-api-key-in-swan-a2ebdb005aa4
+- **api_url:** Default using "https://api.filswan.com"
 
 #### sender
 
-- **offline_mode:** not connect to Swan, generate files locally
-- **output_dir:** dir to move files to, as static resources for downloading
-- **download_url_prefix:** domain name and path to add before the file name
+- **offline_mode:** Default true. Disconnect with filswan.com when it is set to true, you will not be able to create swan task, but you can still create CSV and car Fil for sending deals.
+- **output_dir:** Out directery for saving generated cars
+- **download_url_prefix:** Webserver hostname and path for external client download.
 - **is_public:** task is public [true/false]
 - **is_verified:** deals in this task are going to be sent as verified [true/false]
-- **generate_md5:** generate md5 for miners to verify the integrity of files [true/false] (time-consuming)
-- **wallet:** the wallet to send offline deals
-- **max_price:** the max price per GiB for offline deal
-- **epoch_interval_hours:** the length of hour the deals start after current time, the miner has to finish sealing
-  within this time span
+- **generate_md5:** generate md5 for each car file generated [true/false] (time-consuming)
+- **wallet:** the wallet used for sent offline deals
+- **max_price:** the max price per GiB/epoch for offline deal
+- **start_epoch_hours:** start_epoch for deals in hours
 
 ### Run
 
