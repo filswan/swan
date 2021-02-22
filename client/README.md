@@ -85,8 +85,10 @@ To send offline deals to a miner, use the metadata CSV, generated in step 1.
 ```
     python3 swan_cli.py deal --csv swan-task-<uuid>-metadata.csv  --miner miner_id
 ```
-**--csv (Required):**  file path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid, piece_cid
-**--miner (Required):** target miner id for storage, e.g  f01276
+
+** --csv (Required):**  file path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid, piece_cid
+
+** --miner (Required):** target miner id for storage, e.g  f01276
 
 A csv with name swan-task-uuid-deals.csv is generated under the output directory, it contains the deal cid and miner id for miner process in Swan, you could re-upload this file to swan platform while assign bid to miner or do a private deal.
 
