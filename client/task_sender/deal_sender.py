@@ -11,7 +11,7 @@ def send_deals(config_path, miner_id, task_name, metadata_csv_path=None, deal_li
     from_wallet = config['sender']['wallet']
     max_price = config['sender']['max_price']
     is_verified = config['sender']['is_verified']
-    epoch_interval_hours = config['sender']['epoch_interval_hours']
+    epoch_interval_hours = config['sender']['start_epoch_hours']
     output_dir = config['sender']['output_dir']
 
     deal_config = DealConfig(miner_id, from_wallet, max_price, is_verified, epoch_interval_hours)
