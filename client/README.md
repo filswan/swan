@@ -2,12 +2,12 @@
 
 - lotus node
 - python 3.7+ 
-- pip
+- pip3
 
 ### Install python requirements
 
 ```
-pip install -r requirements.txt 
+pip3 install -r requirements.txt 
 ```
 
 ### Config

@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 import time
 from os import listdir
@@ -18,15 +19,24 @@ def read_file_path_in_dir(dir_path: str) -> List[str]:
     return _file_paths
 
 
-def generate_csv_and_send(_task: SwanTask, _csv_data: List[dict], _output_dir: str, _client: SwanClient):
+def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output_dir: str, _client: SwanClient):
     _csv_name = _task.task_name + ".csv"
     _csv_path = os.path.join(_output_dir, _csv_name)
+
+    logging.info('Swan task CSV %s' % _csv_path)
     with open(_csv_path, "a") as csv_file:
         fieldnames = ['miner_id', 'deal_cid', 'file_source_url', 'md5', 'start_epoch']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
-        for line in _csv_data:
-            csv_writer.writerow(line)
+        for _deal in deal_list:
+            csv_data = {
+                'miner_id': _deal.miner_id,
+                'deal_cid': _deal.deal_cid,
+                'file_source_url': _deal.car_file_url,
+                'md5': _deal.car_file_md5 if _deal.car_file_md5 else "",
+                'start_epoch': _deal.start_epoch
+            }
+            csv_writer.writerow(csv_data)
 
     if _client:
         with open(_csv_path, "r") as csv_file:
@@ -60,6 +70,7 @@ def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_d
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
     _csv_path = os.path.join(_out_dir, "%s-metadata.csv" % _task.task_name)
 
+    logging.info('Metadata CSV %s' % _csv_path)
     with open(_csv_path, "a") as csv_file:
         fieldnames = attributes
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
@@ -69,6 +80,7 @@ def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_d
 
 
 def create_new_task(input_dir, config_path, task_name, miner_id=None):
+    # todo move config reading to cli level
     config = read_config(config_path)
     output_dir = config['sender']['output_dir']
     is_public = config['sender']['is_public']
@@ -79,17 +91,17 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     api_url = config['main']['api_url']
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
-    host = config['main']['host']
-    port = config['main']['port']
-    path = config['main']['path']
+
+    host = config['web-server']['host']
+    port = config['web-server']['port']
+    path = config['web-server']['path']
 
     download_url_prefix = str(host).rstrip("/")
-    if port == 80:
-        pass
-    else:
-        download_url_prefix = download_url_prefix + ":" + str(port)
+    download_url_prefix = download_url_prefix + ":" + str(port)
 
-    download_url_prefix = os.path.join(download_url_prefix, path)
+    path = str(path).strip("/")
+    if path:
+        download_url_prefix = os.path.join(download_url_prefix, path)
 
     if not is_public:
         if not miner_id:
@@ -99,7 +111,6 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     file_paths = read_file_path_in_dir(input_dir)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    csv_data_list = []
     deal_list: List[OfflineDeal] = []
 
     for file_path in file_paths:
@@ -117,14 +128,6 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
 
     for deal in deal_list:
         deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
-        csv_data = {
-            'miner_id': "",
-            'deal_cid': "",
-            'file_source_url': deal.car_file_url,
-            'md5': deal.car_file_md5 if deal.car_file_md5 else "",
-            'start_epoch': ""
-        }
-        csv_data_list.append(csv_data)
 
     if not is_public:
         send_deals(config_path, miner_id, task_name, deal_list=deal_list)
@@ -139,5 +142,8 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
         is_public=is_public,
         is_verified=is_verified
     )
+
+    if miner_id:
+        task.miner_id = miner_id
     generate_metadata_csv(deal_list, task, output_dir)
-    generate_csv_and_send(task, csv_data_list, output_dir, client)
+    generate_csv_and_send(task, deal_list, output_dir, client)
