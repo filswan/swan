@@ -23,7 +23,7 @@ def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output
     _csv_name = _task.task_name + ".csv"
     _csv_path = os.path.join(_output_dir, _csv_name)
 
-    logging.info('Swan task CSV %s' % _csv_path)
+    logging.info('Swan task CSV Generated: %s' % _csv_path)
     with open(_csv_path, "a") as csv_file:
         fieldnames = ['miner_id', 'deal_cid', 'file_source_url', 'md5', 'start_epoch']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
@@ -70,7 +70,7 @@ def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_d
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
     _csv_path = os.path.join(_out_dir, "%s-metadata.csv" % _task.task_name)
 
-    logging.info('Metadata CSV %s' % _csv_path)
+    logging.info('Metadata CSV Generated: %s' % _csv_path)
     with open(_csv_path, "a") as csv_file:
         fieldnames = attributes
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)

@@ -163,7 +163,7 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_f
             logging.error("file %s is too small" % _deal.source_file_name)
             continue
 
-        cost = calculate_real_cost(sector_size, price)
+        cost = f'{calculate_real_cost(sector_size, price):.18f}'
 
         _deal_cid, _start_epoch = propose_offline_deal(price, str(cost), str(piece_size), data_cid, piece_cid,
                                                        deal_conf)
