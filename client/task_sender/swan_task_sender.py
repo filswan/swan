@@ -24,7 +24,7 @@ def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output
     _csv_path = os.path.join(_output_dir, _csv_name)
 
     logging.info('Swan task CSV Generated: %s' % _csv_path)
-    with open(_csv_path, "a") as csv_file:
+    with open(_csv_path, "w") as csv_file:
         fieldnames = ['miner_id', 'deal_cid', 'file_source_url', 'md5', 'start_epoch']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
@@ -102,10 +102,10 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     path = str(path).strip("/")
     if path:
         download_url_prefix = os.path.join(download_url_prefix, path)
-
+    # TODO: Need to support 2 stage
     if not is_public:
         if not miner_id:
-            print('Please provide --miner')
+            print('Please provide --miner for non public deal.')
             exit(1)
 
     file_paths = read_file_path_in_dir(input_dir)
