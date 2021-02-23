@@ -84,7 +84,7 @@ def propose_offline_deal(_price, _cost, piece_size, data_cid, piece_cid, deal_co
     proc = subprocess.Popen(command, stdout=subprocess.PIPE)
     resp = proc.stdout.readline().rstrip().decode('utf-8')
     deal_cid = resp
-    logging.info('deal cid: %s, start epoch: %s' % (deal_cid, start_epoch))
+    logging.info('Deal sent, deal cid: %s, start epoch: %s' % (deal_cid, start_epoch))
     return deal_cid, start_epoch
 
 
@@ -173,6 +173,8 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_f
         _deal.miner_id = deal_conf.miner_id
         _deal.start_epoch = _start_epoch
         _deal.deal_cid = _deal_cid
+
+    logging.info("Swan deal final CSV %s" % output_csv_path)
 
     with open(output_csv_path, "a") as output_csv_file:
         output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
