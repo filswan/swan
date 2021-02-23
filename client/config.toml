@@ -1,15 +1,19 @@
 [main]
 api_key = ""
 access_token = ""
-api_url = ""
+api_url = "https://api.filswan.com"
+
+[web-server]
+host = "https://nbai.io"
+port = 443
+path = "/download"
 
 [sender]
 offline_mode = false
 output_dir = "/tmp/tasks"
-download_url_prefix = "http://download"
 is_public = true
 is_verified = true
 generate_md5 = false
 wallet = ""
 max_price = "0"
-epoch_interval_hours = 96
+start_epoch_hours = 96

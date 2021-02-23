@@ -11,6 +11,8 @@ task_type_regular = "regular"
 
 
 class SwanTask:
+    miner_id = None
+
     def __init__(self, task_name: str, is_public: bool, is_verified: bool):
         self.task_name = task_name
         self.is_public = is_public
@@ -20,7 +22,8 @@ class SwanTask:
         return {
             'task_name': self.task_name,
             'is_public': 1 if self.is_public else 0,
-            'type': task_type_verified if self.is_verified else task_type_regular
+            'type': task_type_verified if self.is_verified else task_type_regular,
+            'miner_id': self.miner_id if self.miner_id else ''
         }
 
 
@@ -34,6 +37,7 @@ class SwanClient:
         self.refresh_token()
 
     def refresh_token(self):
+        logging.info('Refreshing token')
         refresh_api_token_suffix = "/user/api_keys/jwt"
         refresh_api_token_method = 'POST'
 
@@ -49,6 +53,7 @@ class SwanClient:
             logging.info(str(e))
 
     def post_task(self, task: SwanTask, csv):
+        logging.info('Creating new Swan task: %s' % task.task_name)
         create_task_url_suffix = '/tasks'
         create_task_method = 'POST'
 

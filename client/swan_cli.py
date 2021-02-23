@@ -42,8 +42,9 @@ if __name__ == '__main__':
             exit(1)
         input_dir = os.path.abspath(input_dir)
         task_name = args.__getattribute__('task_name')
+        miner_id = args.__getattribute__('miner_id')
 
-        create_new_task(input_dir, config_path, task_name)
+        create_new_task(input_dir, config_path, task_name, miner_id)
 
     elif args.__getattribute__('function') == "deal":
         metadata_csv_path = args.__getattribute__('metadata_csv_path')
@@ -56,7 +57,7 @@ if __name__ == '__main__':
             print('Please provide --miner')
             exit(1)
 
-        send_deals(config_path, miner_id, metadata_csv_path)
+        send_deals(config_path, miner_id, metadata_csv_path=metadata_csv_path)
 
     elif args.__getattribute__('function') == "miner":
         miner_id = args.__getattribute__('miner_id')
