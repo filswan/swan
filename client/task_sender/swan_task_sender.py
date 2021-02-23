@@ -134,8 +134,10 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
 
     if offline_mode:
         client = None
+        logging.info("Working in Offline Mode. You need to manually send out task on filwan.com. ")
     else:
         client = SwanClient(api_url, api_key, access_token)
+        logging.info("Working in Online Mode. A swan task will be created on the filwan.com after process done. ")
 
     task = SwanTask(
         task_name=task_name,
