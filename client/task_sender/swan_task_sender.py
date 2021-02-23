@@ -101,7 +101,7 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
 
     path = str(path).strip("/")
     logging.info(
-        "Swan Client Settings: Public Task: %s  Verified Deals: %s Connected to Swan: %s CSV/car File output dir: %s"
+        "Swan Client Settings: Public Task: %s  Verified Deals: %s  Connected to Swan: %s CSV/car File output dir: %s"
         % (is_public, is_verified, offline_mode, output_dir))
     if path:
         download_url_prefix = os.path.join(download_url_prefix, path)

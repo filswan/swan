@@ -176,7 +176,7 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_f
 
     logging.info("Swan deal final CSV %s" % output_csv_path)
 
-    with open(output_csv_path, "a") as output_csv_file:
+    with open(output_csv_path, "w") as output_csv_file:
         output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
         csv_writer = csv.DictWriter(output_csv_file, delimiter=',', fieldnames=output_fieldnames)
         csv_writer.writeheader()
