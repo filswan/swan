@@ -79,17 +79,17 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     api_url = config['main']['api_url']
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
-    host = config['main']['host']
-    port = config['main']['port']
-    path = config['main']['path']
+
+    host = config['web-server']['host']
+    port = config['web-server']['port']
+    path = config['web-server']['path']
 
     download_url_prefix = str(host).rstrip("/")
-    if port == 80:
-        pass
-    else:
-        download_url_prefix = download_url_prefix + ":" + str(port)
+    download_url_prefix = download_url_prefix + ":" + str(port)
 
-    download_url_prefix = os.path.join(download_url_prefix, path)
+    path = str(path).strip("/")
+    if path:
+        download_url_prefix = os.path.join(download_url_prefix, path)
 
     if not is_public:
         if not miner_id:

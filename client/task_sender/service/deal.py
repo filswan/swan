@@ -109,12 +109,17 @@ def calculate_real_cost(sector_size_bytes, price_per_GiB):
     return real_cost
 
 
-def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name, csv_file_path=None, deal_list=None):
+def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_file_path=None, deal_list=None):
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
 
-    file_name_suffix = "-deals.csv"
+    file_name_suffix = "-deals"
 
-    output_csv_path = os.path.join(output_dir, task_name + file_name_suffix)
+    if csv_file_path:
+        csv_file_name = os.path.basename(csv_file_path)
+        filename, file_ext = os.path.splitext(csv_file_name)
+        output_csv_path = os.path.join(output_dir, filename + file_name_suffix + file_ext)
+    else:
+        output_csv_path = os.path.join(output_dir, task_name + file_name_suffix + ".csv")
 
     if deal_list:
         pass
