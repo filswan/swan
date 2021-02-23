@@ -3,7 +3,7 @@ import logging.config
 from client.task_sender.service.deal import DealConfig, send_deals_to_miner
 from common.config import read_config
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 def send_deals(config_path, miner_id, task_name=None, metadata_csv_path=None, deal_list=None):

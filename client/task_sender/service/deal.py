@@ -9,7 +9,7 @@ from decimal import Decimal
 
 from common.OfflineDeal import OfflineDeal
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 DURATION = '1051200'
 EPOCH_PER_HOUR = 120

@@ -34,6 +34,7 @@ class SwanClient:
         self.refresh_token()
 
     def refresh_token(self):
+        logging.info('Refreshing token')
         refresh_api_token_suffix = "/user/api_keys/jwt"
         refresh_api_token_method = 'POST'
 
@@ -49,6 +50,7 @@ class SwanClient:
             logging.info(str(e))
 
     def post_task(self, task: SwanTask, csv):
+        logging.info('Creating new Swan task: %s' % task.task_name)
         create_task_url_suffix = '/tasks'
         create_task_method = 'POST'
 
