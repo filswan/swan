@@ -57,7 +57,7 @@ if __name__ == '__main__':
             print('Please provide --miner')
             exit(1)
 
-        send_deals(config_path, miner_id, metadata_csv_path)
+        send_deals(config_path, miner_id, metadata_csv_path=metadata_csv_path)
 
     elif args.__getattribute__('function') == "miner":
         miner_id = args.__getattribute__('miner_id')
