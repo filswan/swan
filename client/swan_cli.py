@@ -2,10 +2,10 @@ import argparse
 import os
 import random
 import string
-
+import csv
 from miner_updater.swan_miner_updater import update_miner_info
 from task_sender.deal_sender import send_deals
-from task_sender.swan_task_sender import create_new_task
+from task_sender.swan_task_sender import create_new_task, update_task_by_uuid
 
 
 def random_hash(length=6):
@@ -57,7 +57,13 @@ if __name__ == '__main__':
             print('Please provide --miner')
             exit(1)
 
-        send_deals(config_path, miner_id, metadata_csv_path=metadata_csv_path)
+        with open(metadata_csv_path, 'r') as csvfile:
+            reader = csv.reader(csvfile)
+            column = [row[0] for row in reader]
+            task_uuid = column[1]
+            metadata_deal_csv_path = send_deals(config_path, miner_id, metadata_csv_path=metadata_csv_path, task_uuid=task_uuid)
+            with open(metadata_deal_csv_path, 'r') as deal_csvfile:
+                update_task_by_uuid(config_path, task_uuid, miner_id, deal_csvfile)
 
     elif args.__getattribute__('function') == "miner":
         miner_id = args.__getattribute__('miner_id')
