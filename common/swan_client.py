@@ -53,13 +53,13 @@ class SwanClient:
             logging.info(str(e))
 
     def update_task_by_uuid(self, task_uuid: str, miner_fid: str, csv):
-        logging.info('Updating Swan task.')
         update_task_url_suffix = '/uuid_tasks/'
         update_task_method = 'PUT'
         update_task_url = self.api_url + update_task_url_suffix + task_uuid
         payload_data = {"miner_fid": miner_fid}
 
         send_http_request(update_task_url, update_task_method, self.api_token, payload_data, file=csv)
+        logging.info('Swan task updated.')
 
     def post_task(self, task: SwanTask, csv):
         logging.info('Creating new Swan task: %s' % task.task_name)
@@ -70,6 +70,7 @@ class SwanClient:
         payload_data = task.to_request_dict()
 
         send_http_request(create_task_url, create_task_method, self.api_token, payload_data, file=csv)
+        logging.info('New Swan task Generated.')
 
 
     def update_miner(self, miner: Miner):
