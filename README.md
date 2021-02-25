@@ -23,7 +23,7 @@ You can create an account on [Filswan](https://www.filswan.com) site, afte login
 
 ### Step two: Save your App's key and tokens and keep them secure
 
-Within your "My Profile" ->"Tools" ,You have the chance to generate a set of Access Tokens that can be used to make
+Within your "My Profile"->"Developer Settings" ,You have the chance to generate a set of Access Tokens that can be used to make
 requests on behalf of your personal Twitter account, and a Bearer Token that can be used to authenticate endpoints that
 require jwt Bearer Token. Since these keys and tokens do not expire unless regenerated, we suggest creating
 environment variables or using a secure password manager.
