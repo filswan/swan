@@ -20,7 +20,8 @@ def read_file_path_in_dir(dir_path: str) -> List[str]:
     return _file_paths
 
 
-def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output_dir: str, _client: SwanClient, _uuid: str):
+def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output_dir: str, _client: SwanClient,
+                          _uuid: str):
     _csv_name = _task.task_name + ".csv"
     _csv_path = os.path.join(_output_dir, _csv_name)
 
@@ -46,25 +47,45 @@ def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output
 
 
 def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]:
-    for _deal in _deal_list:
-        car_file_name = _deal.source_file_name + ".car"
-        car_file_path = os.path.join(target_dir, car_file_name)
-        if os.path.isfile(car_file_path):
-            car_file_name = _deal.source_file_name + str(int(time.time())) + ".car"
+
+    csv_path = os.path.join(target_dir, "car.csv")
+
+    with open(csv_path, "w") as csv_file:
+        fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5']
+        csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
+        csv_writer.writeheader()
+
+        for _deal in _deal_list:
+            car_file_name = _deal.source_file_name + ".car"
             car_file_path = os.path.join(target_dir, car_file_name)
+            if os.path.isfile(car_file_path):
+                # car_file_name = _deal.source_file_name + str(int(time.time())) + ".car"
+                car_file_name = _deal.source_file_name + ".car"
+                car_file_path = os.path.join(target_dir, car_file_name)
 
-        _deal.car_file_name = car_file_name
-        _deal.car_file_path = car_file_path
+            _deal.car_file_name = car_file_name
+            _deal.car_file_path = car_file_path
+            car_md5 = ''
+            if _deal.car_file_md5:
+                car_md5 = checksum(car_file_path)
+            #    _deal.car_file_md5 = car_md5
 
-        if _deal.car_file_md5:
-            car_md5 = checksum(car_file_path)
-            _deal.car_file_md5 = car_md5
+            piece_cid, data_cid = stage_one(_deal.source_file_path, car_file_path)
+            # _deal.piece_cid = piece_cid
+            # _deal.data_cid = data_cid
+            # _deal.car_file_size = os.path.getsize(car_file_path)
 
-        piece_cid, data_cid = stage_one(_deal.source_file_path, car_file_path)
-        _deal.piece_cid = piece_cid
-        _deal.data_cid = data_cid
-        _deal.car_file_size = os.path.getsize(car_file_path)
+            csv_data = {
+                'car_file_name': car_file_name,
+                'car_file_path': car_file_path,
+                'piece_cid': piece_cid,
+                'data_cid': data_cid,
+                'car_file_size': os.path.getsize(car_file_path),
+                'car_file_md5': car_md5
+            }
+            csv_writer.writerow(csv_data)
 
+    logging.info("Please upload car files to web server.")
     return _deal_list
 
 
@@ -82,6 +103,7 @@ def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_d
         for _deal in _deal_list:
             csv_writer.writerow(_deal.__dict__)
 
+
 def update_task_by_uuid(config_path, task_uuid, miner_fid, csv):
     config = read_config(config_path)
     api_url = config['main']['api_url']
@@ -90,6 +112,31 @@ def update_task_by_uuid(config_path, task_uuid, miner_fid, csv):
     client = SwanClient(api_url, api_key, access_token)
     print(client.api_token)
     client.update_task_by_uuid(task_uuid, miner_fid, csv)
+
+
+def generate_car_files(input_dir, config_path):
+    config = read_config(config_path)
+    output_dir = config['sender']['output_dir']
+    generate_md5 = config['sender']['generate_md5']
+
+    file_paths = read_file_path_in_dir(input_dir)
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+    deal_list: List[OfflineDeal] = []
+
+    for file_path in file_paths:
+        source_file_name = os.path.basename(file_path)
+
+        offline_deal = OfflineDeal()
+        offline_deal.source_file_name = source_file_name
+        offline_deal.source_file_path = file_path
+        offline_deal.source_file_size = os.path.getsize(file_path)
+        if generate_md5:
+            offline_deal.car_file_md5 = True
+        deal_list.append(offline_deal)
+
+    generate_car(deal_list, output_dir)
+
 
 def create_new_task(input_dir, config_path, task_name, miner_id=None):
     # todo move config reading to cli level
@@ -142,7 +189,18 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
             offline_deal.car_file_md5 = True
         deal_list.append(offline_deal)
 
-    generate_car(deal_list, output_dir)
+    csv_file_path = output_dir + "/car.csv"
+    with open(csv_file_path, "r") as csv_file:
+        fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5']
+        reader = csv.DictReader(csv_file, delimiter=',', fieldnames=fieldnames)
+        next(reader, None)
+        i = 0
+        for row in reader:
+            for attr in row.keys():
+                deal_list[i].__setattr__(attr, row.get(attr))
+            i = i + 1
+
+    # generate_car(deal_list, output_dir)
 
     for deal in deal_list:
         deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
