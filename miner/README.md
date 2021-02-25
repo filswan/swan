@@ -1,3 +1,4 @@
+#Miner Tool Guide
 ## Getting Started
 This tool will listen to the new tasks assigned to your miner from the Swan platform, 
 and start importing deals automatically once the files are downloaded.

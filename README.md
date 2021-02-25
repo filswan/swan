@@ -1,5 +1,5 @@
 # Swan Client
-Swan Client is a pragmatical tool to help client and miner automated the order sending and importing process.
+Swan Client is a pragmatical tool to help client and miner automated the offline deal sending and importing process.
 
 In Swan project, a client is defined as a user who want to send out a deal, and a miner is a Filecoin node who want to import and sealing the deal to Filecoin network.
 ## Want to use this project?
@@ -51,7 +51,6 @@ Please check bellow for the APIs currently supported
 
 [Filswan APIs](https://documenter.getpostman.com/view/13140808/TWDZJbzV)
 
-
 ## Client Tool
 
 Client Tool provide the following functions:
@@ -63,7 +62,7 @@ Client Tool provide the following functions:
 
 ## How to use client tool
 
-Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client) inside client folder
+Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
 
 # Miner tool
 
@@ -73,4 +72,4 @@ Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/
 
 ## How to use the miner tool
 
-Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner) inside Miner folder
+Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
