@@ -19,7 +19,7 @@ This API provides access to a variety of different resources including the follo
 
 ### Step one: Signup a swan account
 
-You can create an account on [Filswan](https://www.filswan.com) site, afte login you, can create
+You can create an account on [Filswan](https://www.filswan.com) site to get the API key support.
 
 ### Step two: Save your App's key and tokens and keep them secure
 
