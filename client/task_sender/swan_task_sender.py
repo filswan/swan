@@ -226,7 +226,7 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
 
     task = SwanTask(
         task_name=task_name,
-        public_deal=public_deal,
+        is_public=public_deal,
         is_verified=is_verified
     )
 
