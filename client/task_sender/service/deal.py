@@ -109,7 +109,7 @@ def calculate_real_cost(sector_size_bytes, price_per_GiB):
     return real_cost
 
 
-def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_file_path=None, deal_list=None):
+def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_file_path=None, deal_list=None, task_uuid=None):
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
 
     file_name_suffix = "-deals"
@@ -177,12 +177,13 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_f
     logging.info("Swan deal final CSV %s" % output_csv_path)
 
     with open(output_csv_path, "w") as output_csv_file:
-        output_fieldnames = ['miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
+        output_fieldnames = ['uuid', 'miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
         csv_writer = csv.DictWriter(output_csv_file, delimiter=',', fieldnames=output_fieldnames)
         csv_writer.writeheader()
 
         for deal in deal_list:
             csv_data = {
+                'uuid': task_uuid,
                 'miner_id': deal_conf.miner_id,
                 'file_source_url': deal.car_file_url,
                 'md5': deal.car_file_md5,
@@ -190,3 +191,5 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_f
                 'deal_cid': deal.deal_cid
             }
             csv_writer.writerow(csv_data)
+
+    return output_csv_path

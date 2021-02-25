@@ -2,7 +2,7 @@ import uuid
 
 
 class OfflineDeal:
-    uid = None
+    uuid = None
     source_file_name = None
     source_file_path = None
     source_file_md5 = None
@@ -19,5 +19,3 @@ class OfflineDeal:
     miner_id = None
     start_epoch = None
 
-    def __init__(self):
-        self.uid = str(uuid.uuid4())

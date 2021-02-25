@@ -8,9 +8,6 @@ sys.path.append("../")
 from common.config import read_config
 from common.swan_client import SwanClient
 
-logging.config.fileConfig('./logging.conf')
-logger = logging.getLogger(__name__)
-
 DEAL_STATUS_FAILED = "ImportFailed"
 DEAL_STATUS_READY = "ReadyForImport"
 DEAL_STATUS_FILE_IMPORTING = "FileImporting"
@@ -24,6 +21,12 @@ ONCHAIN_DEAL_STATUS_WAITTING = "StorageDealWaitingForData"
 
 # Max number of deals to be imported at a time
 IMPORT_NUMNBER = "20"
+
+config = read_config()
+api_url = config['main']['api_url']
+api_key = config['main']['api_key']
+access_token = config['main']['access_token']
+client = SwanClient(api_url, api_key, access_token)
 
 
 def get_deal_on_chain_status(deal_cid: str):
@@ -55,8 +58,8 @@ def update_offline_deal_status(status: str, note: str, task_id: str, deal_cid: s
         logger.error(str(e))
 
 
-if __name__ == '__main__':
-
+def importer():
+    logger = logging.getLogger('swan_miner_deal_importer')
     config = read_config()
     api_url = config['main']['api_url']
     api_key = config['main']['api_key']
