@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--name', dest='task_name', default="swan-task-" + random_hash(),
                         help="Task name (default: hash name)")
-    parser.add_argument('--input', dest='input_dir', help="Path to the dir of files ready to create a new task")
+    parser.add_argument('--input-dir', dest='input_dir', help="Path to the dir of files ready to create a new task")
 
     parser.add_argument('--miner', dest='miner_id', help="Miner ID to send deals to.")
     parser.add_argument('--csv', dest='metadata_csv_path', help="The CSV file path of deal metadata.")
@@ -39,14 +39,14 @@ if __name__ == '__main__':
     if args.__getattribute__('function') == 'car':
         input_dir = args.__getattribute__('input_dir')
         if not input_dir:
-            print('Please provide --input')
+            print('Please provide --input-dir')
             exit(1)
         generate_car_files(input_dir, config_path)
 
     if args.__getattribute__('function') == 'task':
         input_dir = args.__getattribute__('input_dir')
         if not input_dir:
-            print('Please provide --input')
+            print('Please provide --input-dir')
             exit(1)
         input_dir = os.path.abspath(input_dir)
         task_name = args.__getattribute__('task_name')

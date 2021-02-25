@@ -151,7 +151,7 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     # todo move config reading to cli level
     config = read_config(config_path)
     output_dir = config['sender']['output_dir']
-    is_public = config['sender']['is_public']
+    public_deal = config['sender']['public_deal']
     is_verified = config['sender']['is_verified']
     generate_md5 = config['sender']['generate_md5']
     offline_mode = config['sender']['offline_mode']
@@ -173,11 +173,11 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     path = str(path).strip("/")
     logging.info(
         "Swan Client Settings: Public Task: %s  Verified Deals: %s  Connected to Swan: %s CSV/car File output dir: %s"
-        % (is_public, is_verified, offline_mode, output_dir))
+        % (public_deal, is_verified, not offline_mode, output_dir))
     if path:
         download_url_prefix = os.path.join(download_url_prefix, path)
     # TODO: Need to support 2 stage
-    if not is_public:
+    if not public_deal:
         if not miner_id:
             print('Please provide --miner for non public deal.')
             exit(1)
@@ -214,7 +214,7 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
     for deal in deal_list:
         deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
 
-    if not is_public:
+    if not public_deal:
         final_csv_path = send_deals(config_path, miner_id, task_name, deal_list=deal_list, task_uuid=task_uuid)
 
     if offline_mode:
@@ -226,7 +226,7 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
 
     task = SwanTask(
         task_name=task_name,
-        is_public=is_public,
+        is_public=public_deal,
         is_verified=is_verified
     )
 
