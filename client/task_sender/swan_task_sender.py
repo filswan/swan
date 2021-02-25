@@ -20,6 +20,7 @@ def read_file_path_in_dir(dir_path: str) -> List[str]:
     return _file_paths
 
 
+
 def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output_dir: str, _client: SwanClient,
                           _uuid: str):
     _csv_name = _task.task_name + ".csv"
@@ -103,6 +104,14 @@ def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_d
         for _deal in _deal_list:
             csv_writer.writerow(_deal.__dict__)
 
+def update_task_by_uuid(config_path, task_uuid, miner_fid, csv):
+    config = read_config(config_path)
+    api_url = config['main']['api_url']
+    api_key = config['main']['api_key']
+    access_token = config['main']['access_token']
+    client = SwanClient(api_url, api_key, access_token)
+    print(client.api_token)
+    client.update_task_by_uuid(task_uuid, miner_fid, csv)
 
 def update_task_by_uuid(config_path, task_uuid, miner_fid, csv):
     config = read_config(config_path)
