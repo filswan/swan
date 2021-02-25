@@ -2,6 +2,7 @@ import csv
 import logging
 import os
 import time
+import uuid
 from os import listdir
 from os.path import isfile, join
 from pathlib import Path
@@ -19,17 +20,18 @@ def read_file_path_in_dir(dir_path: str) -> List[str]:
     return _file_paths
 
 
-def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output_dir: str, _client: SwanClient):
+def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output_dir: str, _client: SwanClient, _uuid: str):
     _csv_name = _task.task_name + ".csv"
     _csv_path = os.path.join(_output_dir, _csv_name)
 
     logging.info('Swan task CSV Generated: %s' % _csv_path)
     with open(_csv_path, "w") as csv_file:
-        fieldnames = ['miner_id', 'deal_cid', 'file_source_url', 'md5', 'start_epoch']
+        fieldnames = ['uuid', 'miner_id', 'deal_cid', 'file_source_url', 'md5', 'start_epoch']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
         for _deal in deal_list:
             csv_data = {
+                'uuid': _uuid,
                 'miner_id': _deal.miner_id,
                 'deal_cid': _deal.deal_cid,
                 'file_source_url': _deal.car_file_url,
@@ -66,18 +68,28 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
     return _deal_list
 
 
-def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_dir: str):
+def generate_metadata_csv(_deal_list: List[OfflineDeal], _task: SwanTask, _out_dir: str, _uuid: str):
+    for deal in _deal_list:
+        deal.uuid = _uuid
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
     _csv_path = os.path.join(_out_dir, "%s-metadata.csv" % _task.task_name)
 
     logging.info('Metadata CSV Generated: %s' % _csv_path)
-    with open(_csv_path, "a") as csv_file:
+    with open(_csv_path, "w") as csv_file:
         fieldnames = attributes
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
         for _deal in _deal_list:
             csv_writer.writerow(_deal.__dict__)
 
+def update_task_by_uuid(config_path, task_uuid, miner_fid, csv):
+    config = read_config(config_path)
+    api_url = config['main']['api_url']
+    api_key = config['main']['api_key']
+    access_token = config['main']['access_token']
+    client = SwanClient(api_url, api_key, access_token)
+    print(client.api_token)
+    client.update_task_by_uuid(task_uuid, miner_fid, csv)
 
 def create_new_task(input_dir, config_path, task_name, miner_id=None):
     # todo move config reading to cli level
@@ -98,6 +110,9 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
 
     download_url_prefix = str(host).rstrip("/")
     download_url_prefix = download_url_prefix + ":" + str(port)
+
+    task_uuid = str(uuid.uuid4())
+    final_csv_path = ""
 
     path = str(path).strip("/")
     logging.info(
@@ -133,7 +148,7 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
         deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
 
     if not is_public:
-        send_deals(config_path, miner_id, task_name, deal_list=deal_list)
+        final_csv_path = send_deals(config_path, miner_id, task_name, deal_list=deal_list, task_uuid=task_uuid)
 
     if offline_mode:
         client = None
@@ -150,5 +165,6 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
 
     if miner_id:
         task.miner_id = miner_id
-    generate_metadata_csv(deal_list, task, output_dir)
-    generate_csv_and_send(task, deal_list, output_dir, client)
+
+    generate_metadata_csv(deal_list, task, output_dir, task_uuid)
+    generate_csv_and_send(task, deal_list, output_dir, client, task_uuid)
