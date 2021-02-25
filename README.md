@@ -2,13 +2,7 @@
 Swan Client is a pragmatical tool to help client and miner automated the offline deal sending and importing process.
 
 In Swan project, a client is defined as a user who want to send out a deal, and a miner is a Filecoin node who want to import and sealing the deal to Filecoin network.
-## Want to use this project?
 
-## Basics
-
-1. Fork/Clone
-1. Activate a virtualenv
-1. Install the requirements
 
 ## Using the Swan API
 
