@@ -8,7 +8,6 @@ from task_sender.deal_sender import send_deals
 from task_sender.swan_task_sender import create_new_task, update_task_by_uuid, generate_car_files
 
 
-
 def random_hash(length=6):
     chars = string.ascii_lowercase + string.digits
     ran_hash = ''.join(random.choice(chars) for _ in range(length))

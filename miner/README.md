@@ -48,4 +48,3 @@ For config.toml
 ```shell
 python3 swan_miner.py
 ```
-

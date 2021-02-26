@@ -22,6 +22,7 @@ def read_file_path_in_dir(dir_path: str) -> List[str]:
 
 def generate_csv_and_send(_task: SwanTask, deal_list: List[OfflineDeal], _output_dir: str, _client: SwanClient,
                           _uuid: str):
+
     _csv_name = _task.task_name + ".csv"
     _csv_path = os.path.join(_output_dir, _csv_name)
 
@@ -109,7 +110,6 @@ def update_task_by_uuid(config_path, task_uuid, miner_fid, csv):
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
     client = SwanClient(api_url, api_key, access_token)
-    print(client.api_token)
     client.update_task_by_uuid(task_uuid, miner_fid, csv)
 
     
@@ -145,6 +145,7 @@ def generate_car_files(input_dir, config_path):
         deal_list.append(offline_deal)
 
     generate_car(deal_list, output_dir)
+    client.update_task_by_uuid(task_uuid, miner_fid, csv)
 
 
 def create_new_task(input_dir, config_path, task_name, miner_id=None):
@@ -215,6 +216,7 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
         deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
 
     if not public_deal:
+
         final_csv_path = send_deals(config_path, miner_id, task_name, deal_list=deal_list, task_uuid=task_uuid)
 
     if offline_mode:
@@ -234,5 +236,4 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
         task.miner_id = miner_id
 
     generate_metadata_csv(deal_list, task, output_dir, task_uuid)
-
     generate_csv_and_send(task, deal_list, output_dir, client, task_uuid)
