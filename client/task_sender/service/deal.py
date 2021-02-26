@@ -174,7 +174,7 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_f
         _deal.start_epoch = _start_epoch
         _deal.deal_cid = _deal_cid
 
-    logging.info("Swan deal final CSV %s" % output_csv_path)
+    logging.info("Swan deal final CSV Generated: %s" % output_csv_path)
 
     with open(output_csv_path, "w") as output_csv_file:
         output_fieldnames = ['uuid', 'miner_id', 'file_source_url', 'md5', 'start_epoch', 'deal_cid']
