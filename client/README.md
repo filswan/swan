@@ -139,10 +139,10 @@ in config.toml: set public_deal = true
 python3 swan_cli.py task --input-dir [input_file_dir] --name [task_name]
 ```
 
---input-dir Each file under this directory will be converted to a Car file, the generated car file will be located
+**--input-dir (Required)** Each file under this directory will be converted to a Car file, the generated car file will be located
 under the output folder defined in config.toml
 
---name (optional) Given task name while creating task on Swan platform, default:
+**--name (optional)** Given task name while creating task on Swan platform, default:
 swan-task-uuid
 
 Two CSV files are generated after successfully running the command: task-name.csv, task-name-metadata.csv. They are under
