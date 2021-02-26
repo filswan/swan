@@ -5,7 +5,7 @@ import string
 import csv
 from miner_updater.swan_miner_updater import update_miner_info
 from task_sender.deal_sender import send_deals
-from task_sender.swan_task_sender import create_new_task, update_task_by_uuid
+from task_sender.swan_task_sender import create_new_task, update_task_by_uuid, generate_car_files
 
 
 def random_hash(length=6):
@@ -17,15 +17,15 @@ def random_hash(length=6):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Swan client')
 
-    parser.add_argument('function', metavar='task/deal', choices=['task', 'deal', 'miner'], type=str, nargs="?",
-                        help='Create new Swan task/Send deal/Update miner info')
+    parser.add_argument('function', metavar='task/deal', choices=['task', 'deal', 'miner', 'car'], type=str, nargs="?",
+                        help='Create new Swan task/Send deal/Update miner info/Generate car file')
 
     parser.add_argument('--config', dest='config_path', default="./config.toml",
                         help="Path to the config file (default: ./config.toml)")
 
     parser.add_argument('--name', dest='task_name', default="swan-task-" + random_hash(),
                         help="Task name (default: hash name)")
-    parser.add_argument('--input', dest='input_dir', help="Path to the dir of files ready to create a new task")
+    parser.add_argument('--input-dir', dest='input_dir', help="Path to the dir of files ready to create a new task")
 
     parser.add_argument('--miner', dest='miner_id', help="Miner ID to send deals to.")
     parser.add_argument('--csv', dest='metadata_csv_path', help="The CSV file path of deal metadata.")
@@ -35,10 +35,17 @@ if __name__ == '__main__':
     config_path = args.__getattribute__('config_path')
     config_path = os.path.abspath(config_path)
 
+    if args.__getattribute__('function') == 'car':
+        input_dir = args.__getattribute__('input_dir')
+        if not input_dir:
+            print('Please provide --input-dir')
+            exit(1)
+        generate_car_files(input_dir, config_path)
+
     if args.__getattribute__('function') == 'task':
         input_dir = args.__getattribute__('input_dir')
         if not input_dir:
-            print('Please provide --input')
+            print('Please provide --input-dir')
             exit(1)
         input_dir = os.path.abspath(input_dir)
         task_name = args.__getattribute__('task_name')
