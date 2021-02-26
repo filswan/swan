@@ -8,6 +8,8 @@ imports and seals the deals to Filecoin network. A general guide of lotus offlin
 
 https://docs.filecoin.io/store/lotus/very-large-files
 
+## If you are a client want to send deal
+
 A general guides of offline deal sending contains the following steps:
 1. Client builds A car file.
 2. Client proposes the deal to a specified miner
@@ -24,16 +26,39 @@ Client Tool provide the following functions:
 * Propose deals from the local car file
 * Create CSV file contains deal ID and miner id for miner processing.
 
-### How to use client tool
+## How to use client tool
 
 Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
 
-## If you are a miner wants to import deal
+# If you are a miner want to import deal
 
 * Miner car file downloader
 * Miner importer
 * Deal status updater
 
+## How to use the miner tool
+
+Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
+
+
+## If you are a developer want to use Swan API
+
+The Swan API can be used to programmatically retrieve and analyze data, as well as engage with the conversation on
+Twitter.
+
+This API provides access to a variety of different resources including the following:
+
+* Authorization
+* Miners
+* Tasks
+
+## How to get access to the Swan API
+
+### Step one: Signup a swan account
+
+You can create an account on [Filswan](https://www.filswan.com) site to get the API key support.
+
+### Step two: Save your App's key and tokens and keep them secure
 ### How to use the miner tool
 
 Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
@@ -73,7 +98,6 @@ curl --location --request POST 'https://api.filswan.com/user/api_keys/jwt' \
     "apikey": "my-apikey"
 }'
 ```
-
 Once you get the token, you can use it to access Swan APIs via postman or other API tools.
 
 ## Supported API Document
