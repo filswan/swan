@@ -1,2 +1,2 @@
-miner_id,deal_cid,file_source_url,md5,start_epoch
-f019104,bafy2bzacebikhvpxget3hz55jno74llgv7nmohu4jdl2r2n6onlynqq7jh3v6,https://www.download.com/test.car,c6971094cc781cfc941291bc615ee58b,343612
+uuid,miner_id,deal_cid,file_source_url,md5,start_epoch
+0b89e0cf-f3ec-41a3-8f1e-52b098f0c503,f047419,bafyreid7tw7mcwlj465dqudwanml3mueyzizezct6cm5a7g2djfxjfgxwm,http://download.com/downloads/ubuntu-15.04-server-i386.iso.tar.car,,544835
