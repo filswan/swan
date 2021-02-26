@@ -6,7 +6,6 @@ This tool is designed for client complete the following steps of sending deals.
 2. Share the car file via webserver or hard disk.
 3. Client proposes the deals to a specified miner.
 
-
 ## Basic Concept
 
 ### Task
@@ -116,7 +115,9 @@ INFO:root:Generating data CID....
 INFO:root:Data CID: bafykbzacebbq4g73e4he32ahyynnamrft2tva2jyjt5fsxfqv76anptmyoajw
 INFO:root:Please upload car files to web server.
 ```
+
 ### Step 2: Upload car files to webserver
+
 After generated the car files, you may need copy tha files to a webserver manually.
 
 ### Step 3. Create a task
@@ -130,7 +131,9 @@ python3 swan_cli.py task --input-dir [input_file_dir] --miner [miner_id]
 ```
 
 #### Options 2: Public Task
+
 in config.toml: set public_deal = true
+
 1. Generate the public task
 
 ```shell
@@ -152,20 +155,21 @@ task-name.csv is a CSV generated for post a task in Swan platform or transfer to
 miner_id,deal_cid,file_source_url,md5,start_epoch
 ```
 
-Output metadata CSV task-name-metadata.csv contains more rich content for creating proposal in the next step
+Output metadata CSV [task-name-metadata.csv] contains more rich content for creating proposal in the next step
 
 ```
 uuid,source_file_name,source_file_path,source_file_md5,source_file_url,source_file_size,car_file_name,car_file_path,car_file_md5,car_file_url,car_file_size,deal_cid,data_cid,piece_cid,miner_id,start_epoch
 ```
 
-2. Propose offline deal
-
-To send offline deals to a miner, use the metadata CSV, generated in previous step.
+2. Propose offline deal After miner win the bid, client needs to use use the metadata CSV generated in the previous step
+   for sending the offline deals to the miner.
 
 ```
 python3 swan_cli.py deal --csv [task-name-metadata.csv]  --miner [miner_id]
 ```
+
 A sample output is like this:
+
 ```shell
 INFO:root:['lotus', 'client', 'deal', '--from', 'f3ufzpudvsjqyiholpxiqoomsd2svy26jvy4z4pzodikgovkhkp6ioxf5p4jbpnf7tgyg67dny4j75e7og7zeq', '--start-epoch', '544243', '--manual-piece-cid', 'baga6ea4seaqcqjelghbfwy2r6fxsffzfv6gs2gyvc75crxxltiscpajfzk6csii', '--manual-piece-size', '66584576', 'bafykbzaceb6dtpjjisy5pzwksrxwfothlmfjtmcjj7itsvw2flpp5co5ikxam', 'f019104', '0.000000000000000000', '1051200']
 INFO:root:wallet: f3ufzpudvsjqyiholpxiqoomsd2svy26jvy4z4pzodikgovkhkp6ioxf5p4jbpnf7tgyg67dny4j75e7og7zeq
@@ -180,12 +184,13 @@ INFO:root:Refreshing token
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTQzNzA5ODcsImlhdCI6MTYxNDI4NDU4Nywic3ViIjoiV2pIVkJDYWIxM2FyUURlUldwbkw0QSJ9.Hn8f0z2Ew6DuL2E2ELgpi9_Gj8xrg28S3v31dTUW32s
 INFO:root:Updating Swan task.
 ```
+
 **--csv (Required):**  file path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid,
 piece_cid
 
 **--miner (Required):** target miner id for storage, e.g f01276
 
-A csv with name [task-name]-metadata-deals.csv is generated under the output directory, it contains the deal cid and miner id
-for miner process in Swan, you could re-upload this file to swan platform while assign bid to miner or do a private
-deal.
+A csv with name [task-name]-metadata-deals.csv is generated under the output directory, it contains the deal cid and
+miner id for miner process in Swan, you could re-upload this file to swan platform while assign bid to miner or do a
+private deal.
 
