@@ -1,31 +1,32 @@
 # Swan Tool Kits
 
-Swan Tool Kits is set of pragmatical tools to help client and miner automated the offline deal sending and importing
+Swan Tool Kits is a set of pragmatical tools to help client and miner automated the offline deal sending and importing
 process.
 
-In Swan project, a client is defined as a user who send out deals, and a miner is a Filecoin node who imports and seals
+In Swan project, a client is defined as a user who sends out deals, and a miner is a Filecoin node who imports and seals
 the deals to Filecoin network. A general guide of lotus offline deal can be found here:
 
 https://docs.filecoin.io/store/lotus/very-large-files
 
 ## If you are a client wants to send deal
 
-Client Tool provide the following functions:
+Client Tool provides the following functions:
 
-* Generate Car file from downloaded files.
-* Create CSV file for miner pre-download the car file with the url you specified.
-* Propose deals from the local car file
-* Create CSV file contains deal ID and miner id for miner processing.
+* Generate Car files from downloaded source files.
+* Create meta CSV file with deals information e.g. car file URi,start epoch,etc.
+* Propose deals based on meta CSV.
+* Create final CSV file contains deal IDs and miner id for miner processing imports.
+* Post tasks on Swan Platform
 
-### How to use client tool
+### How to use the client tool
 
 Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
 
-## If you are a miner want to import deal
-
-* Miner car file downloader
-* Miner importer
-* Deal status updater
+## If you are a miner wants to import deal
+Miner Tool provides the following functions:
+* car file downloading
+* car file importing
+* Deal status update
 
 ### How to use the miner tool
 
