@@ -167,10 +167,10 @@ uuid,source_file_name,source_file_path,source_file_md5,source_file_url,source_fi
 python3 swan_cli.py deal --csv [task-name-metadata.csv]  --miner [miner_id]
 ```
 
-**--csv (Required):**  file path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid,
+**--csv (Required):**  File path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid,
 piece_cid
 
-**--miner (Required):** target miner id, e.g f01276
+**--miner (Required):** Target miner id, e.g f01276
 
 A csv with name [task-name]-metadata-deals.csv is generated under the output directory, it contains the deal cid and
 miner id for miner to process on Swan platform. You could re-upload this file to Swan platform while assign bid to miner or do a
