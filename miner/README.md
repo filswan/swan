@@ -45,6 +45,7 @@ For config.toml
 
 ### Run
 
+
 ```shell
 python3 swan_miner.py
 ```
