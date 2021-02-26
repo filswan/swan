@@ -1,10 +1,10 @@
 # Client Tool Guide
 
-This tool is designed for client complete the following steps of sending deals.
+This tool is designed for client to complete the process of sending deals through the following steps:
 
-1. Client batch generated car file for files under a specified folder.
+1. Batch generate car files for files under a specified folder.
 2. Share the car file via webserver or hard disk.
-3. Client proposes the deals to a specified miner.
+3. Propose the deals to a specified miner.
 
 ## Basic Concept
 
@@ -13,20 +13,20 @@ This tool is designed for client complete the following steps of sending deals.
 In swan project, a task can contain multiple offline deals. There are two basic type of tasks:
 
 - Public Task
-    * A public task is a task set for open bid. After bidder win the deal, the client needs to propose the deal to the
-      bidder winner.
+    * A public task is a deal set for open bid. After bidder win the bid, the task holder needs to propose the task to the winner.
 - Private Task
-    * A private task is used while sending to specified miner.
+    * A private task is used to propose deals to a specified miner.
 
 ### Offline Deal
 
-An Offline deal size can be from mb to 32 GB. We suggest client create csv file contains the following information to
-send to miners for enhancement of t the data consistency and easy rebuild the graph in the future. uuid is generated for
-future index purpose.
-
+The size of an offline deal can be up to 64 GB. It is suggested to create a CSV file contains the following information: 
 uuid|miner_id|deal_cid|file_source_url|md5|start_epoch
 ------------|-------------|-------------|-------------|-------------|-------------
 0b89e0cf-f3ec-41a3-8f1e-52b098f0c503|f047419|bafyreid7tw7mcwlj465dqudwanml3mueyzizezct6cm5a7g2djfxjfgxwm|http://download.com/downloads/fil.tar.car| |544835
+
+This CSV file is helpful to enhance the data consistency and rebuild the graph in the future. 
+uuid is generated for future index purpose.
+
 
 ## Prerequisite
 
@@ -68,39 +68,38 @@ start_epoch_hours = 96
 
 #### main
 
-Mai section define the token used for connecting with swan platform, you can ignore this part if offline_mode set to
+Main section defines the token used for connecting with Swan platform. This part can be ignored if offline_mode is set to
 true in [sender] section
 
-- **api_key & access_token:** Acquire from [Filswan](https://www.filswan.com) -> "My Profile"->"Developer Settings",You
+- **api_key & access_token:** Acquire from [Filswan](https://www.filswan.com) -> "My Profile"->"Developer Settings". You
   can also check the [Guide](https://nebulaai.medium.com/how-to-use-api-key-in-swan-a2ebdb005aa4)
 - **api_url:** Default: "https://api.filswan.com"
 
 #### web-server
 
-web-server is the client used for miner download files host on client slide.Miner will download files from this URL.
-When generate the CSV file, the downloadable URL is built with the following format: host+port+path+filename,
+web-server is used to upload generated Car files. Miner will download Car files from this web-server.
+The downloadable URL in the CSV file is built with the following format: host+port+path+filename,
 e.g. http://nbai.io:8080/download/<filename>
 
 Support for IPFS node will be provided in 0.2.0 release.
 
 #### sender
 
-- **offline_mode:** Default true. Disconnect with filswan.com when it is set to true, you will not be able to create
-  swan task, but you can still create CSV and car Fil for sending deals.
-- **output_dir:** Output directory for saving generated cars and CSVs
+- **offline_mode:** [true/false] Default false. If it is set to true, you will not be able to create Swan task on filswan.com, but you can still create CSVs and Car Files for sending deals.
+- **output_dir:** Output directory for saving generated Car files and CSVs
 
-- **public_deal:** [true/false] Deals in the tasks are public deals
-- **is_verified:** [true/false] Deals in this task are going to be sent as verified
-- **generate_md5:** [true/false] Generate md5 for each car file ,note: this is a resource consuming action
-- **wallet:**  Wallet used for sent offline deals
+- **public_deal:** [true/false] Whether deals in the tasks are public deals
+- **is_verified:** [true/false] Whether deals in this task are going to be sent as verified
+- **generate_md5:** [true/false] Whether to generate md5 for each car file, note: this is a resource consuming action
+- **wallet:**  Wallet used for sending offline deals
 - **max_price:** Max price willing to pay per GiB/epoch for offline deal
 - **start_epoch_hours:** start_epoch for deals in hours from current time
 
 ## How to use
 
-### Step 1. Generate car file for offline deal
+### Step 1. Generate Car files for offline deal
 
-For both public task and offline task, you need first create a car file
+For both public task and offline task, you need to generate Car files
 
 ```shell
 python3 swan_cli.py car --input-dir [input_file_dir]
@@ -116,9 +115,9 @@ INFO:root:Data CID: bafykbzacebbq4g73e4he32ahyynnamrft2tva2jyjt5fsxfqv76anptmyoa
 INFO:root:Please upload car files to web server.
 ```
 
-### Step 2: Upload car files to webserver
+### Step 2: Upload Car files to webserver
 
-After generated the car files, you may need copy tha files to a webserver manually.
+After generate the car files, you need to copy the files to a web-server manually.
 
 ### Step 3. Create a task
 
@@ -128,6 +127,26 @@ in config.toml: set public_deal = false
 
 ```shell
 python3 swan_cli.py task --input-dir [input_file_dir] --miner [miner_id]
+```
+
+The output will be like:
+```shell
+INFO:root:Swan Client Settings: Public Task: False  Verified Deals: True  Connected to Swan: True CSV/car File output dir: /tmp/tasks
+INFO:root:['lotus', 'client', 'deal', '--from', 't3u4othyfcqjiiveolvdczcww3rypxgonz7mnqfvbtf2paklpru5f6csoajdfz5nznqy2kpr4eielsmksyurnq', '--start-epoch', '547212', '--manual-piece-cid', 'baga6ea4seaqcqjelghbfwy2r6fxsffzfv6gs2gyvc75crxxltiscpajfzk6csii', '--manual-piece-size', '66584576', 'bafykbzaceb6dtpjjisy5pzwksrxwfothlmfjtmcjj7itsvw2flpp5co5ikxam', 't01101', '0.000000000000000000', '1051200']
+INFO:root:wallet: t3u4othyfcqjiiveolvdczcww3rypxgonz7mnqfvbtf2paklpru5f6csoajdfz5nznqy2kpr4eielsmksyurnq
+INFO:root:miner: t01101
+INFO:root:price: 0
+INFO:root:total cost: 0.000000000000000000
+INFO:root:start epoch: 547212
+Press Enter to continue...
+INFO:root:Deal sent, deal cid: bafyreibnmon4sby7ibwiezcjgjge7mshl3h24vftzkab5fqm4ll2voarna, start epoch: 547212
+INFO:root:Swan deal final CSV Generated: /tmp/tasks/swan-client-demo-deals.csv
+INFO:root:Refreshing token
+INFO:root:Working in Online Mode. A swan task will be created on the filwan.com after process done. 
+INFO:root:Metadata CSV Generated: /tmp/tasks/swan-client-demo-metadata.csv
+INFO:root:Swan task CSV Generated: /tmp/tasks/swan-client-demo.csv
+INFO:root:Creating new Swan task: swan-client-demo
+INFO:root:New Swan task Generated.
 ```
 
 #### Options 2: Public Task
@@ -140,35 +159,44 @@ in config.toml: set public_deal = true
 python3 swan_cli.py task --input-dir [input_file_dir] --name [task_name]
 ```
 
---input-dir For each file under this directory will be converted to a car file, the generated car file will be located
+**--input-dir (Required)** Each file under this directory will be converted to a Car file, the generated car file will be located
 under the output folder defined in config.toml
 
---name (optional) field, Given task name while creating task in swan platform, default:
+**--name (optional)** Given task name while creating task on Swan platform, default:
 swan-task-uuid
 
-Two CSV files is generated after successfully running the command: task-name.csv, task-name-metadata.csv. They are under
+Two CSV files are generated after successfully running the command: task-name.csv, task-name-metadata.csv. They are under
 the output folder defined in config.toml.
 
-task-name.csv is a CSV generated for post a task in Swan platform or transfer to miners directly for offline import
+[task-name.csv] is a CSV generated for posting a task on Swan platform or transferring to miners directly for offline import
 
 ```
 miner_id,deal_cid,file_source_url,md5,start_epoch
 ```
 
-Output metadata CSV [task-name-metadata.csv] contains more rich content for creating proposal in the next step
+[task-name-metadata.csv] contains more content for creating proposal in the next step
 
 ```
 uuid,source_file_name,source_file_path,source_file_md5,source_file_url,source_file_size,car_file_name,car_file_path,car_file_md5,car_file_url,car_file_size,deal_cid,data_cid,piece_cid,miner_id,start_epoch
 ```
 
-2. Propose offline deal After miner win the bid, client needs to use use the metadata CSV generated in the previous step
+2. Propose offline deal after miner win the bid. Client needs to use the metadata CSV generated in the previous step
    for sending the offline deals to the miner.
 
 ```
 python3 swan_cli.py deal --csv [task-name-metadata.csv]  --miner [miner_id]
 ```
 
-A sample output is like this:
+**--csv (Required):**  File path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid,
+piece_cid
+
+**--miner (Required):** Target miner id, e.g f01276
+
+A csv with name [task-name]-metadata-deals.csv is generated under the output directory, it contains the deal cid and
+miner id for miner to process on Swan platform. You could re-upload this file to Swan platform while assign bid to miner or do a
+private deal.
+
+The output will be like:
 
 ```shell
 INFO:root:['lotus', 'client', 'deal', '--from', 'f3ufzpudvsjqyiholpxiqoomsd2svy26jvy4z4pzodikgovkhkp6ioxf5p4jbpnf7tgyg67dny4j75e7og7zeq', '--start-epoch', '544243', '--manual-piece-cid', 'baga6ea4seaqcqjelghbfwy2r6fxsffzfv6gs2gyvc75crxxltiscpajfzk6csii', '--manual-piece-size', '66584576', 'bafykbzaceb6dtpjjisy5pzwksrxwfothlmfjtmcjj7itsvw2flpp5co5ikxam', 'f019104', '0.000000000000000000', '1051200']
@@ -183,14 +211,5 @@ INFO:root:Swan deal final CSV /tmp/tasks/task-name-metadata-deals.csv
 INFO:root:Refreshing token
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTQzNzA5ODcsImlhdCI6MTYxNDI4NDU4Nywic3ViIjoiV2pIVkJDYWIxM2FyUURlUldwbkw0QSJ9.Hn8f0z2Ew6DuL2E2ELgpi9_Gj8xrg28S3v31dTUW32s
 INFO:root:Updating Swan task.
+INFO:root:Swan task updated.
 ```
-
-**--csv (Required):**  file path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid,
-piece_cid
-
-**--miner (Required):** target miner id for storage, e.g f01276
-
-A csv with name [task-name]-metadata-deals.csv is generated under the output directory, it contains the deal cid and
-miner id for miner process in Swan, you could re-upload this file to swan platform while assign bid to miner or do a
-private deal.
-

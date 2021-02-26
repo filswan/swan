@@ -2,11 +2,11 @@
 
 ## Getting Started
 
-This miner tool will listen to the tasks come from Swan platform. It provides the following functions:
+This miner tool listens to the tasks come from Swan platform. It provides the following functions:
 
 * Start arial2 download service for downloading tasks.
 * Import deals once download completed.
-* Synopsize deal status to with Swan platform, so you client will know the realtime status changes
+* Synchronize deal status with Swan platform, so client will know the realtime status changes
 
 ### Prerequisites
 
@@ -20,10 +20,10 @@ sudo apt install aria2
 
 For aria2.conf
 
-- **rpc-secret:**  default: my_aria2_secret, it will be used in the config.toml for rpc, you can change it to your own
-  value
+- **rpc-secret:**  default: my_aria2_secret. It will be used in the config.toml for rpc.
 
 For config.toml
+
 [main]
 
 - **api_url:** Swan API address. For Swan production, it is "https://api.filswan.com"
@@ -31,7 +31,7 @@ For config.toml
 - **expected_sealing_time:** The time expected for sealing deals. Deals starting too soon will be rejected.
 - **import_interval:** Importing interval between each deal.
 - **scan_interval:** Time interval to scan all the ongoing deals and update status on Swan platform.
-- **api_key & access_token:** Acquire from [Filswan](https://www.filswan.com) -> "My Profile"->"Developer Settings",You
+- **api_key & access_token:** Acquire from [Filswan](https://www.filswan.com) -> "My Profile"->"Developer Settings". You
   can also check the [Guide](https://nebulaai.medium.com/how-to-use-api-key-in-swan-a2ebdb005aa4)
 
 [aria2]
