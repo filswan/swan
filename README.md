@@ -8,7 +8,7 @@ imports and seals the deals to Filecoin network. A general guide of lotus offlin
 
 https://docs.filecoin.io/store/lotus/very-large-files
 
-## If you are a client want to send deal
+## If you are a client wants to send deal
 
 A general guides of offline deal sending contains the following steps:
 1. Client builds A car file.
@@ -40,35 +40,12 @@ Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/
 
 Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
 
-
-## If you are a developer want to use Swan API
-
-The Swan API can be used to programmatically retrieve and analyze data, as well as engage with the conversation on
-Twitter.
-
-This API provides access to a variety of different resources including the following:
-
-* Authorization
-* Miners
-* Tasks
-
-## How to get access to the Swan API
-
-### Step one: Signup a swan account
-
-You can create an account on [Filswan](https://www.filswan.com) site to get the API key support.
-
-### Step two: Save your App's key and tokens and keep them secure
-### How to use the miner tool
-
-Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
-
 ## If you are a developer wants to use Swan API
 
-The Swan API can be used to programmatically retrieve and analyze data, as well as engage with the conversation on
+The Swan APIs can be used to programmatically retrieve and analyze data, as well as engage with the conversation on
 Twitter.
 
-This API provides access to a variety of different resources including the following:
+These APIs provide access to a variety of different resources including the following:
 
 * Authorization
 * Miners
