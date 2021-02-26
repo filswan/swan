@@ -4,7 +4,31 @@ Swan Client is a pragmatical tool to help client and miner automated the offline
 In Swan project, a client is defined as a user who want to send out a deal, and a miner is a Filecoin node who want to import and sealing the deal to Filecoin network.
 
 
-## Using the Swan API
+## If you are a client want to send deal
+
+Client Tool provide the following functions:
+
+* Generate Car file from downloaded files.
+* Create CSV file for miner pre-download the car file with the url you defined.
+* Propose deal from the local car file
+* Create CSV file contains deal ID and miner id for miner processing.
+
+## How to use client tool
+
+Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
+
+# If you are a miner want to import deal
+
+* Miner car file downloader
+* Miner importer
+* Deal status updater
+
+## How to use the miner tool
+
+Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
+
+
+## If you are a developer want to use Swan API
 
 The Swan API can be used to programmatically retrieve and analyze data, as well as engage with the conversation on
 Twitter.
@@ -44,26 +68,3 @@ Once you get the token, you can use it to access Swan APIs via postman or other 
 Please check bellow for the APIs currently supported
 
 [Filswan APIs](https://documenter.getpostman.com/view/13140808/TWDZJbzV)
-
-## Client Tool
-
-Client Tool provide the following functions:
-
-* Generate Car file from downloaded files.
-* Create CSV file for miner pre-download the car file with the url you defined.
-* Propose deal from the local car file
-* Create CSV file contains deal ID and miner id for miner processing.
-
-## How to use client tool
-
-Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
-
-# Miner tool
-
-* Miner car file downloader
-* Miner importer
-* Deal status updater
-
-## How to use the miner tool
-
-Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
