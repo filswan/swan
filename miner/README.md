@@ -2,8 +2,11 @@
 
 ## Getting Started
 
-This tool will listen to the new tasks assigned to your miner from the Swan platform, and start importing deals
-automatically once the files are downloaded.
+This miner tool will listen to the tasks come from Swan platform. It provides the following functions:
+
+* Start arial2 download service for downloading tasks.
+* Import deals once download completed.
+* Synopsize deal status to with Swan platform, so you client will know the realtime status changes
 
 ### Prerequisites
 
@@ -15,14 +18,12 @@ sudo apt install aria2
 
 ### Config
 
-Edit aria2.conf
+For aria2.conf
 
-- **input-file:** Downloads the URIs listed in session
-- **save-session:** Save error/unfinished downloads to session on exit.
-- **rpc-secret:** Enable JSON-RPC/XML-RPC server. It is strongly recommended to set secret authorization.
+- **rpc-secret:**  default: my_aria2_secret, it will be used in the config.toml for rpc, you can change it to your own
+  value
 
-Edit config.toml
-
+For config.toml
 [main]
 
 - **api_url:** Swan API address. For Swan production, it is "https://api.filswan.com"
@@ -35,12 +36,16 @@ Edit config.toml
 
 [aria2]
 
-- **aria2_download_dir:** Directory where offline deal files will be downloaded to automatically
-- **aria2_conf:** Aria2 configuration file
+- **aria2_download_dir:** Directory where offline deal files will be downloaded for importing
+- **aria2_conf:** Aria2 configuration file location
 - **aria2_host:** Aria2 server address
 - **aria2_port:** Aria2 server port
-- **aria2_secret:** Must be consistent with aria2_secret in aria2.conf
+- **aria2_secret:** Must be the same value as rpc-secre in aria2.conf
+
 
 ### Run
 
-    python3 swan_miner.py
+```shell
+python3 swan_miner.py
+```
+
