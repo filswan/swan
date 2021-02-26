@@ -88,7 +88,7 @@ Support for IPFS node will be provided in 0.2.0 release.
 
 - **offline_mode:** Default true. Disconnect with filswan.com when it is set to true, you will not be able to create
   swan task, but you can still create CSV and car Fil for sending deals.
-- **output_dir:** Out directory for saving generated cars
+- **output_dir:** Output directory for saving generated cars and CSVs
 
 - **public_deal:** [true/false] Deals in the tasks are public deals
 - **is_verified:** [true/false] Deals in this task are going to be sent as verified
@@ -163,7 +163,7 @@ uuid,source_file_name,source_file_path,source_file_md5,source_file_url,source_fi
 To send offline deals to a miner, use the metadata CSV, generated in previous step.
 
 ```
-    python3 swan_cli.py deal --csv [task-name-metadata.csv]  --miner [miner_id]
+python3 swan_cli.py deal --csv [task-name-metadata.csv]  --miner [miner_id]
 ```
 A sample output is like this:
 ```shell
@@ -180,10 +180,10 @@ INFO:root:Refreshing token
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTQzNzA5ODcsImlhdCI6MTYxNDI4NDU4Nywic3ViIjoiV2pIVkJDYWIxM2FyUURlUldwbkw0QSJ9.Hn8f0z2Ew6DuL2E2ELgpi9_Gj8xrg28S3v31dTUW32s
 INFO:root:Updating Swan task.
 ```
-** --csv (Required):**  file path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid,
+**--csv (Required):**  file path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid,
 piece_cid
 
-** --miner (Required):** target miner id for storage, e.g f01276
+**--miner (Required):** target miner id for storage, e.g f01276
 
 A csv with name [task-name]-metadata-deals.csv is generated under the output directory, it contains the deal cid and miner id
 for miner process in Swan, you could re-upload this file to swan platform while assign bid to miner or do a private
