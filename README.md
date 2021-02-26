@@ -8,34 +8,33 @@ the deals to Filecoin network. A general guide of lotus offline deal can be foun
 
 https://docs.filecoin.io/store/lotus/very-large-files
 
-## If you are a client wants to send deal
+## If you are a client who wants to send deals
 
 Client Tool provides the following functions:
 
 * Generate Car files from downloaded source files.
-* Create meta CSV file with deals information e.g. car file URi,start epoch,etc.
-* Propose deals based on meta CSV.
-* Create final CSV file contains deal IDs and miner id for miner processing imports.
-* Post tasks on Swan Platform
+* Generate metadata e.g. Car file URI, start epoch, etc. and save them to a metadata CSV file.
+* Propose deals based on the metadata CSV file.
+* Generate a final CSV file contains deal IDs and miner id for miner to import deals.
+* Create tasks on Swan Platform.
 
 ### How to use the client tool
 
 Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
 
-## If you are a miner wants to import deal
+## If you are a miner who wants to import deals
 Miner Tool provides the following functions:
-* car file downloading
-* car file importing
-* Deal status update
+* Download Car file.
+* Import Car file.
+* Update deal status.
 
 ### How to use the miner tool
 
 Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
 
-## If you are a developer wants to use Swan API
+## If you are a developer who wants to use Swan APIs
 
-The Swan APIs can be used to programmatically retrieve and analyze data, as well as engage with the conversation on
-Twitter.
+The Swan APIs can be used to programmatically retrieve and analyze data.
 
 These APIs provide access to a variety of different resources including the following:
 
@@ -43,17 +42,16 @@ These APIs provide access to a variety of different resources including the foll
 * Miners
 * Tasks
 
-### How to get access to the Swan API
+### How to get access to the Swan APIs
 
 #### Step one: Signup a swan account
 
 You can create an account on [Filswan](https://www.filswan.com) site to get the API key support.
 
-#### Step two: Save your App's key and tokens and keep them secure
+#### Step two: Save your API keys and tokens and keep them secure
 
-Within your "My Profile"->"Developer Settings" ,You have the chance to generate a set of Access Tokens that can be used
-to make requests on behalf of your personal Twitter account, and a Bearer Token that can be used to authenticate
-endpoints that require jwt Bearer Token. Since these keys and tokens do not expire unless regenerated, we suggest
+Under "My Profile"->"Developer Settings", you can generate a set of API Keys and Access Tokens which can be used
+to make requests on behalf of your personal Swan account. Since these API keys and Access Tokens do not expire unless regenerated, we suggest
 creating environment variables or using a secure password manager.
 
 #### Step three: Set up your access
