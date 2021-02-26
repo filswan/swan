@@ -3,19 +3,10 @@
 Swan Tool Kits is set of pragmatical tools to help client and miner automated the offline deal sending and importing
 process.
 
-In Swan project, a client is defined as a user who  send out deals, and a miner is a Filecoin node who 
-imports and seals the deals to Filecoin network. A general guide of lotus offline deal can be found here:
+In Swan project, a client is defined as a user who send out deals, and a miner is a Filecoin node who imports and seals
+the deals to Filecoin network. A general guide of lotus offline deal can be found here:
 
 https://docs.filecoin.io/store/lotus/very-large-files
-
-## If you are a client wants to send deal
-
-A general guides of offline deal sending contains the following steps:
-1. Client builds A car file.
-2. Client proposes the deal to a specified miner
-3. Send the car file via webserver or hard disk.
-4. Miner gets the car file and starts importing
-5. Deal active and online.
 
 ## If you are a client wants to send deal
 
@@ -30,7 +21,7 @@ Client Tool provide the following functions:
 
 Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
 
-##  If you are a miner want to import deal
+## If you are a miner want to import deal
 
 * Miner car file downloader
 * Miner importer
@@ -68,13 +59,14 @@ creating environment variables or using a secure password manager.
 
 You can get your jwt Bearer Token via the following API.
 
-```
+```shell
 curl --location --request POST 'https://api.filswan.com/user/api_keys/jwt' \
 --data-raw '{
     "access_token": "my-access-token",
     "apikey": "my-apikey"
 }'
 ```
+
 Once you get the token, you can use it to access Swan APIs via postman or other API tools.
 
 ## Supported API Document
