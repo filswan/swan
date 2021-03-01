@@ -145,8 +145,6 @@ def generate_car_files(input_dir, config_path):
         deal_list.append(offline_deal)
 
     generate_car(deal_list, output_dir)
-    client.update_task_by_uuid(task_uuid, miner_fid, csv)
-
 
 def create_new_task(input_dir, config_path, task_name, miner_id=None):
     # todo move config reading to cli level
