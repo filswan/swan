@@ -6,6 +6,7 @@ import re
 import subprocess
 import time
 from decimal import Decimal
+from pathlib import Path
 
 from common.OfflineDeal import OfflineDeal
 
@@ -110,6 +111,8 @@ def calculate_real_cost(sector_size_bytes, price_per_GiB):
 
 
 def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_file_path=None, deal_list=None, task_uuid=None):
+
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
 
     file_name_suffix = "-deals"
