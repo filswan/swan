@@ -6,13 +6,15 @@ from common.config import read_config
 logging.basicConfig(level=logging.INFO)
 
 
-def send_deals(config_path, miner_id, task_name=None, metadata_csv_path=None, deal_list=None, task_uuid=None):
+def send_deals(config_path, miner_id, task_name=None, metadata_csv_path=None, deal_list=None, task_uuid=None, out_dir=None):
     config = read_config(config_path)
     from_wallet = config['sender']['wallet']
     max_price = config['sender']['max_price']
     is_verified = config['sender']['is_verified']
     epoch_interval_hours = config['sender']['start_epoch_hours']
-    output_dir = config['sender']['output_dir']
+    output_dir = out_dir
+    if not out_dir:
+        output_dir = config['sender']['output_dir']
 
     deal_config = DealConfig(miner_id, from_wallet, max_price, is_verified, epoch_interval_hours)
 
