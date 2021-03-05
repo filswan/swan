@@ -64,7 +64,7 @@ def find_next_deal_ready_to_download(miner_fid: str):
             deals = client.get_offline_deals(miner_fid, DEAL_WAITING_STATUS, str(1))
     except Exception as e:
         logging.error("Failed to find next ready to download deal.")
-        logging.error(e)
+        logging.error(str(e))
         return None
     return deals
 
@@ -75,7 +75,7 @@ def find_deals_by_status(status: str, miner_fid: str):
         deals = client.get_offline_deals(miner_fid, status, str(50))
     except Exception as e:
         logging.error("Failed to find deals: " + status)
-        logging.error(e)
+        logging.error(str(e))
     return deals
 
 
@@ -90,7 +90,7 @@ def start_download_for_deal(deal, client: Aria2c):
         resp = json.loads(client.addUri(file_resource_url, option))
     except Exception as e:
         logging.error("Failed to download deal.")
-        logging.error(e)
+        logging.error(str(e))
         update_offline_deal_details(DEAL_DOWNLOAD_FAILED_STATUS, deal["id"])
 
         return
@@ -167,7 +167,7 @@ def check_download_status(client: Aria2c):
 
     except Exception as e:
         logging.error("Failed to check download status.")
-        logging.error(e)
+        logging.error(str(e))
 
 
 def start_downloading(max_downloading_task_num: int, miner_fid, client: Aria2c):
