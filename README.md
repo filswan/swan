@@ -8,7 +8,9 @@ the deals to Filecoin network. A general guide of lotus offline deal can be foun
 
 https://docs.filecoin.io/store/lotus/very-large-files
 
+
 ## If you are a client who wants to send deals
+
 
 Client Tool provides the following functions:
 
@@ -20,6 +22,10 @@ Client Tool provides the following functions:
 
 ### How to use the client tool
 
+```shell
+git clone https://github.com/nebulaai/swan
+cd client
+```
 Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
 
 ## If you are a miner who wants to import deals
@@ -30,6 +36,10 @@ Miner Tool provides the following functions:
 
 ### How to use the miner tool
 
+```shell
+git clone https://github.com/nebulaai/swan
+cd miner
+```
 Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
 
 ## If you are a developer who wants to use Swan APIs
