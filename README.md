@@ -24,7 +24,7 @@ Client Tool provides the following functions:
 
 ```shell
 git clone https://github.com/nebulaai/swan
-cd client
+cd swan/miner
 ```
 Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
 
@@ -38,7 +38,7 @@ Miner Tool provides the following functions:
 
 ```shell
 git clone https://github.com/nebulaai/swan
-cd miner
+cd swan/miner
 ```
 Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
 
