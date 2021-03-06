@@ -49,7 +49,8 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
     csv_path = os.path.join(target_dir, "car.csv")
 
     with open(csv_path, "w") as csv_file:
-        fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5']
+        fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5',
+                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
 
@@ -79,10 +80,15 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
                 'piece_cid': piece_cid,
                 'data_cid': data_cid,
                 'car_file_size': os.path.getsize(car_file_path),
-                'car_file_md5': car_md5
+                'car_file_md5': car_md5,
+                'source_file_name': _deal.source_file_name,
+                'source_file_path': _deal.source_file_path,
+                'source_file_size': _deal.source_file_size,
+                'source_file_md5': _deal.source_file_md5
             }
             csv_writer.writerow(csv_data)
 
+    logging.info("Car files output dir: " + target_dir)
     logging.info("Please upload car files to web server.")
     return _deal_list
 
@@ -111,12 +117,14 @@ def update_task_by_uuid(config_path, task_uuid, miner_fid, csv):
     client.update_task_by_uuid(task_uuid, miner_fid, csv)
 
 
-def generate_car_files(input_dir, config_path):
+def generate_car_files(input_dir, config_path, out_dir):
     config = read_config(config_path)
-    output_dir = config['sender']['output_dir']
     generate_md5 = config['sender']['generate_md5']
-
     file_paths = read_file_path_in_dir(input_dir)
+    output_dir = out_dir
+    if not output_dir:
+        output_dir = config['sender']['output_dir'] + '/' + str(uuid.uuid4())
+
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     deal_list: List[OfflineDeal] = []
@@ -135,10 +143,12 @@ def generate_car_files(input_dir, config_path):
     generate_car(deal_list, output_dir)
 
 
-def create_new_task(input_dir, config_path, task_name, miner_id=None):
+def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
     # todo move config reading to cli level
     config = read_config(config_path)
-    output_dir = config['sender']['output_dir']
+    output_dir = out_dir
+    if not output_dir:
+        output_dir = config['sender']['output_dir']
     public_deal = config['sender']['public_deal']
     is_verified = config['sender']['is_verified']
     generate_md5 = config['sender']['generate_md5']
@@ -186,16 +196,18 @@ def create_new_task(input_dir, config_path, task_name, miner_id=None):
             offline_deal.car_file_md5 = True
         deal_list.append(offline_deal)
 
-    csv_file_path = output_dir + "/car.csv"
+    deal_list: List[OfflineDeal] = []
+    csv_file_path = input_dir + "/car.csv"
     with open(csv_file_path, "r") as csv_file:
-        fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5']
+        fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5',
+                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5']
         reader = csv.DictReader(csv_file, delimiter=',', fieldnames=fieldnames)
         next(reader, None)
-        i = 0
         for row in reader:
+            deal = OfflineDeal()
             for attr in row.keys():
-                deal_list[i].__setattr__(attr, row.get(attr))
-            i = i + 1
+                deal.__setattr__(attr, row.get(attr))
+            deal_list.append(deal)
 
     # generate_car(deal_list, output_dir)
 
