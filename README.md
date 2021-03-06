@@ -32,7 +32,7 @@ Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/
 Miner Tool provides the following functions:
 * Download Car file.
 * Import Car file.
-* Update deal status.
+* Update deal status on Swan Platform.
 
 ### How to use the miner tool
 

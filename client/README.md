@@ -102,18 +102,22 @@ Support for IPFS node will be provided in 0.2.0 release.
 For both public task and offline task, you need to generate Car files
 
 ```shell
-python3 swan_cli.py car --input-dir [input_file_dir]
+python3 swan_cli.py car --input-dir [input_files_dir] --out-dir [car_files_output_dir] 
 ```
 
 The output will be like:
 
 ```shell
 INFO:root:Generating car file from: [input_file_dir]/ubuntu-15.04-server-i386.iso.tar
-INFO:root:car file Generated: /tmp/tasks/ubuntu-15.04-server-i386.iso.tar.car, piece cid: baga6ea4seaqbpggkuxz7gpkm2wf3734gkyna3vb4p7bm3qcbl4gb4jgh22vj2pi, piece size: 15.88 GiB
+INFO:root:car file Generated: [car_files_output_dir]/ubuntu-15.04-server-i386.iso.tar.car, piece cid: baga6ea4seaqbpggkuxz7gpkm2wf3734gkyna3vb4p7bm3qcbl4gb4jgh22vj2pi, piece size: 15.88 GiB
 INFO:root:Generating data CID....
 INFO:root:Data CID: bafykbzacebbq4g73e4he32ahyynnamrft2tva2jyjt5fsxfqv76anptmyoajw
+INFO:root:Car files output dir: [car_files_output_dir]
 INFO:root:Please upload car files to web server.
 ```
+If --out-dir is not provided, then the output directory for the car files will be: output_dir (specified in the configuration file) + a random uuid
+
+For example: /tmp/tasks/7f33a9d6-47d0-4635-b152-5e380733bf09
 
 ### Step 2: Upload Car files to webserver
 
@@ -126,12 +130,12 @@ After generate the car files, you need to copy the files to a web-server manuall
 in config.toml: set public_deal = false
 
 ```shell
-python3 swan_cli.py task --input-dir [input_file_dir] --miner [miner_id]
+python3 swan_cli.py task --input-dir [car_files_dir] --out-dir [output_files_dir] --miner [miner_id]
 ```
 
 The output will be like:
 ```shell
-INFO:root:Swan Client Settings: Public Task: False  Verified Deals: True  Connected to Swan: True CSV/car File output dir: /tmp/tasks
+INFO:root:Swan Client Settings: Public Task: False  Verified Deals: True  Connected to Swan: True CSV/car File output dir: /tmp/tasks/[output_files_dir]
 INFO:root:['lotus', 'client', 'deal', '--from', 't3u4othyfcqjiiveolvdczcww3rypxgonz7mnqfvbtf2paklpru5f6csoajdfz5nznqy2kpr4eielsmksyurnq', '--start-epoch', '547212', '--manual-piece-cid', 'baga6ea4seaqcqjelghbfwy2r6fxsffzfv6gs2gyvc75crxxltiscpajfzk6csii', '--manual-piece-size', '66584576', 'bafykbzaceb6dtpjjisy5pzwksrxwfothlmfjtmcjj7itsvw2flpp5co5ikxam', 't01101', '0.000000000000000000', '1051200']
 INFO:root:wallet: t3u4othyfcqjiiveolvdczcww3rypxgonz7mnqfvbtf2paklpru5f6csoajdfz5nznqy2kpr4eielsmksyurnq
 INFO:root:miner: t01101
@@ -140,11 +144,11 @@ INFO:root:total cost: 0.000000000000000000
 INFO:root:start epoch: 547212
 Press Enter to continue...
 INFO:root:Deal sent, deal cid: bafyreibnmon4sby7ibwiezcjgjge7mshl3h24vftzkab5fqm4ll2voarna, start epoch: 547212
-INFO:root:Swan deal final CSV Generated: /tmp/tasks/swan-client-demo-deals.csv
+INFO:root:Swan deal final CSV Generated: /tmp/tasks/[output_files_dir]/swan-client-demo-deals.csv
 INFO:root:Refreshing token
 INFO:root:Working in Online Mode. A swan task will be created on the filwan.com after process done. 
-INFO:root:Metadata CSV Generated: /tmp/tasks/swan-client-demo-metadata.csv
-INFO:root:Swan task CSV Generated: /tmp/tasks/swan-client-demo.csv
+INFO:root:Metadata CSV Generated: /tmp/tasks/[output_files_dir]/swan-client-demo-metadata.csv
+INFO:root:Swan task CSV Generated: /tmp/tasks/[output_files_dir]/swan-client-demo.csv
 INFO:root:Creating new Swan task: swan-client-demo
 INFO:root:New Swan task Generated.
 ```
@@ -156,17 +160,18 @@ in config.toml: set public_deal = true
 1. Generate the public task
 
 ```shell
-python3 swan_cli.py task --input-dir [input_file_dir] --name [task_name]
+python3 swan_cli.py task --input-dir [car_files_dir] --out-dir [output_files_dir] --name [task_name]
 ```
 
 **--input-dir (Required)** Each file under this directory will be converted to a Car file, the generated car file will be located
 under the output folder defined in config.toml
 
-**--name (optional)** Given task name while creating task on Swan platform, default:
+**--out-dir (optional)** Metadata CSV and Swan task CSV will be generated to the given directory. Default: output_dir specified in config.toml 
+
+**--name (optional)** Given task name while creating task on Swan platform. Default:
 swan-task-uuid
 
-Two CSV files are generated after successfully running the command: task-name.csv, task-name-metadata.csv. They are under
-the output folder defined in config.toml.
+Two CSV files are generated after successfully running the command: task-name.csv, task-name-metadata.csv.
 
 [task-name.csv] is a CSV generated for posting a task on Swan platform or transferring to miners directly for offline import
 
@@ -184,11 +189,13 @@ uuid,source_file_name,source_file_path,source_file_md5,source_file_url,source_fi
    for sending the offline deals to the miner.
 
 ```
-python3 swan_cli.py deal --csv [task-name-metadata.csv]  --miner [miner_id]
+python3 swan_cli.py deal --csv [metada_csv_dir/task-name-metadata.csv] --out-dir [output_files_dir] --miner [miner_id]
 ```
 
-**--csv (Required):**  File path to the metadata CSV file, mandatory fields: source_file_size, car_file_url, data_cid,
+**--csv (Required):** File path to the metadata CSV file. Mandatory metadata CSV fields: source_file_size, car_file_url, data_cid,
 piece_cid
+
+**--out-dir (optional)** Swan deal final CSV will be generated to the given directory. Default: output_dir specified in config.toml
 
 **--miner (Required):** Target miner id, e.g f01276
 
@@ -207,7 +214,7 @@ INFO:root:total cost: 0.000000000000000000
 INFO:root:start epoch: 544243
 Press Enter to continue...
 INFO:root:Deal sent, deal cid: bafyreicqgsxql7oqkzr7mtwyrhnoedgmzpd5br3er7pa6ooc54ja6jmnkq, start epoch: 544243
-INFO:root:Swan deal final CSV /tmp/tasks/task-name-metadata-deals.csv
+INFO:root:Swan deal final CSV /tmp/tasks/[output_files_dir]/task-name-metadata-deals.csv
 INFO:root:Refreshing token
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTQzNzA5ODcsImlhdCI6MTYxNDI4NDU4Nywic3ViIjoiV2pIVkJDYWIxM2FyUURlUldwbkw0QSJ9.Hn8f0z2Ew6DuL2E2ELgpi9_Gj8xrg28S3v31dTUW32s
 INFO:root:Updating Swan task.
