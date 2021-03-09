@@ -50,7 +50,7 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
 
     with open(csv_path, "w") as csv_file:
         fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5',
-                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5', 'car_file_address']
+                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5', 'car_file_url']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
 
@@ -85,7 +85,7 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
                 'source_file_path': _deal.source_file_path,
                 'source_file_size': _deal.source_file_size,
                 'source_file_md5': _deal.source_file_md5,
-                'car_file_address': ''
+                'car_file_url': ''
             }
             csv_writer.writerow(csv_data)
 
@@ -209,6 +209,8 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
 
+    storage_server_type = config['main']['storage_server_type']
+
     host = config['web-server']['host']
     port = config['web-server']['port']
     path = config['web-server']['path']
@@ -251,7 +253,7 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
     csv_file_path = input_dir + "/car.csv"
     with open(csv_file_path, "r") as csv_file:
         fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5',
-                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5', 'car_file_address']
+                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5', 'car_file_url']
         reader = csv.DictReader(csv_file, delimiter=',', fieldnames=fieldnames)
         next(reader, None)
         for row in reader:
@@ -262,8 +264,9 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
 
     # generate_car(deal_list, output_dir)
 
-    for deal in deal_list:
-        deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
+    if storage_server_type == "web server":
+        for deal in deal_list:
+            deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
 
     if not public_deal:
         final_csv_path = send_deals(config_path, miner_id, task_name, deal_list=deal_list, task_uuid=task_uuid)
