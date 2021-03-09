@@ -2,11 +2,16 @@
 api_key = ""
 access_token = ""
 api_url = "https://api.filswan.com"
+storage_server_type = "ipfs server"
 
 [web-server]
 host = "https://nbai.io"
 port = 443
 path = "/download"
+
+[ipfs-server]
+api_address = "/ip4/127.0.0.1/tcp/5001"
+gateway_address = "/ip4/127.0.0.1/tcp/8080"
 
 [sender]
 offline_mode = false

@@ -132,6 +132,21 @@ class SwanClient:
 
         send_http_request(url, update_offline_deal_details_method, self.jwt_token, body)
 
+    def upload_car_to_ipfs(api_address: str, car_file_path: str):
+        url = api_address + "/api/v0/add"
+        upload_car_to_ipfs_method = "POST"
+        car_file = open(car_file_path, encoding = "ISO-8859-1")
+        payload_file = {"file": car_file}
+        with requests.request(url=url, method=upload_car_to_ipfs_method, files=payload_file) as r:
+            if r.status_code >= 400:
+                raise Exception(r.text)
+            else:
+                return r.json()['Hash']
+
+    def parseMultiAddr(multiAddr: str):
+        elements = multiAddr.split('/')
+        return elements[2], elements[4]
+
 
 def send_http_request(url, method, token, payload, file=None):
     if isinstance(payload, str):
