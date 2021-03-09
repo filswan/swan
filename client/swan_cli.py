@@ -5,7 +5,7 @@ import string
 import csv
 from miner_updater.swan_miner_updater import update_miner_info
 from task_sender.deal_sender import send_deals
-from task_sender.swan_task_sender import create_new_task, update_task_by_uuid, generate_car_files
+from task_sender.swan_task_sender import create_new_task, update_task_by_uuid, generate_car_files, upload_car_files
 
 
 def random_hash(length=6):
@@ -17,7 +17,7 @@ def random_hash(length=6):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Swan client')
 
-    parser.add_argument('function', metavar='task/deal', choices=['task', 'deal', 'miner', 'car'], type=str, nargs="?",
+    parser.add_argument('function', metavar='task/deal', choices=['task', 'deal', 'miner', 'car', 'upload'], type=str, nargs="?",
                         help='Create new Swan task/Send deal/Update miner info/Generate car file')
 
     parser.add_argument('--config', dest='config_path', default="./config.toml",
@@ -44,6 +44,14 @@ if __name__ == '__main__':
         out_dir = args.__getattribute__('out_dir')
 
         generate_car_files(input_dir, config_path, out_dir)
+
+    if args.__getattribute__('function') == 'upload':
+        input_dir = args.__getattribute__('input_dir')
+        if not input_dir:
+            print('Please provide --input-dir')
+            exit(1)
+
+        upload_car_files(input_dir, config_path)
 
     if args.__getattribute__('function') == 'task':
         input_dir = args.__getattribute__('input_dir')
