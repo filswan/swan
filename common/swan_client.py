@@ -106,7 +106,7 @@ class SwanClient:
         return send_http_request(update_miner_url, update_miner_method, self.jwt_token, payload_data)
 
     @SwanTool.refresh_token
-    def get_offline_deals(self, miner_fid: str, status: str, limit: int):
+    def get_offline_deals(self, miner_fid: str, status: str, limit: str):
         url = self.api_url + "/offline_deals/" + miner_fid + "?deal_status=" + status + "&limit=" + limit + "&offset=0"
 
         get_offline_deals_method = "GET"
