@@ -150,7 +150,7 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
     if not output_dir:
         output_dir = config['sender']['output_dir']
     public_deal = config['sender']['public_deal']
-    is_verified = config['sender']['is_verified']
+    verified_deal = config['sender']['verified_deal']
     generate_md5 = config['sender']['generate_md5']
     offline_mode = config['sender']['offline_mode']
 
@@ -171,7 +171,7 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
     path = str(path).strip("/")
     logging.info(
         "Swan Client Settings: Public Task: %s  Verified Deals: %s  Connected to Swan: %s CSV/car File output dir: %s"
-        % (public_deal, is_verified, not offline_mode, output_dir))
+        % (public_deal, verified_deal, not offline_mode, output_dir))
     if path:
         download_url_prefix = os.path.join(download_url_prefix, path)
     # TODO: Need to support 2 stage
@@ -227,7 +227,7 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
     task = SwanTask(
         task_name=task_name,
         is_public=public_deal,
-        is_verified=is_verified
+        is_verified=verified_deal
     )
 
     if miner_id:
