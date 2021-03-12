@@ -25,8 +25,8 @@ client = SwanClient(api_url, api_key, access_token)
 DEAL_DOWNLOADING_STATUS = 'Downloading'
 DEAL_DOWNLOADED_STATUS = 'Downloaded'
 DEAL_DOWNLOAD_FAILED_STATUS = 'DownloadFailed'
-DEAL_CREATED_STATUS = 'CREATED'
-DEAL_WAITING_STATUS = 'WAITING'
+DEAL_CREATED_STATUS = 'Created'
+DEAL_WAITING_STATUS = 'Waiting'
 
 ARIA2_TASK_ACTIVE_STATUS = "active"
 ARIA2_TASK_COMPLETE_STATUS = "complete"
