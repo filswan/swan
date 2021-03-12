@@ -51,6 +51,7 @@ def get_deal_on_chain_status(deal_cid: str):
 
 
 def update_offline_deal_status(status: str, note: str, task_id: str, deal_cid: str):
+    logger = logging.getLogger('swan_miner_deal_importer')
     try:
         client.update_offline_deal_status(status, note, task_id, deal_cid)
     except Exception as e:
