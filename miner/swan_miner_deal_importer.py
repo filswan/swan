@@ -50,10 +50,10 @@ def get_deal_on_chain_status(deal_cid: str):
         return str(error)
 
 
-def update_offline_deal_status(status: str, note: str, task_id: str, deal_cid: str):
+def update_offline_deal_status(status: str, note: str, deal_id: str):
     logger = logging.getLogger('swan_miner_deal_importer')
     try:
-        client.update_offline_deal_status(status, note, task_id, deal_cid)
+        client.update_offline_deal_details(status, note, deal_id)
     except Exception as e:
         logger.error("Failed to update offline deal status.")
         logger.error(str(e))
@@ -71,7 +71,7 @@ def importer():
 
     while True:
         client = SwanClient(api_url, api_key, access_token)
-        deals = client.get_offline_deals(miner_fid, DEAL_STATUS_READY, IMPORT_NUMNBER)
+        deals = client.get_offline_deals(miner_fid, DEAL_STATUS_READY, int(IMPORT_NUMNBER))
 
         if deals is None or isinstance(deals, Exception):
             if isinstance(deals, Exception):
@@ -104,25 +104,25 @@ def importer():
             if on_chain_status == ONCHAIN_DEAL_STATUS_ERROR:
                 logger.info("Deal on chain status is error before importing.")
                 note = "Deal error before importing."
-                update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["task_id"]), deal["deal_cid"])
+                update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["id"]))
                 continue
 
             if on_chain_status == ONCHAIN_DEAL_STATUS_ACTIVE:
                 logger.info("Deal on chain status is active before importing.")
                 note = "Deal active before importing."
-                update_offline_deal_status(DEAL_STATUS_ACTIVE, note, str(deal["task_id"]), deal["deal_cid"])
+                update_offline_deal_status(DEAL_STATUS_ACTIVE, note, str(deal["id"]))
                 continue
 
             if on_chain_status == ONCHAIN_DEAL_STATUS_NOTFOUND:
                 logger.info("Deal on chain status not found.")
                 note = "Deal not found."
-                update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["task_id"]), deal["deal_cid"])
+                update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["id"]))
                 continue
 
             if on_chain_status != ONCHAIN_DEAL_STATUS_WAITTING:
                 logger.info("Deal is already imported, please check.")
                 note = on_chain_status
-                update_offline_deal_status(DEAL_STATUS_FILE_IMPORTED, note, str(deal["task_id"]), deal["deal_cid"])
+                update_offline_deal_status(DEAL_STATUS_FILE_IMPORTED, note, str(deal["id"]))
                 continue
 
             try:
@@ -141,25 +141,25 @@ def importer():
                 if deal.get("start_epoch") - current_epoch < expected_sealing_time:
                     logger.info("Deal will start too soon. Do not import this deal.")
                     note = "Deal expired."
-                    update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["task_id"]), deal["deal_cid"])
+                    update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["id"]))
                     continue
 
                 command = "lotus-miner storage-deals import-data " + deal.get("deal_cid") + " " + deal.get("file_path")
                 logger.info('Command: %s' % command)
 
                 note = ""
-                update_offline_deal_status(DEAL_STATUS_FILE_IMPORTING, note, str(deal["task_id"]), deal["deal_cid"])
+                update_offline_deal_status(DEAL_STATUS_FILE_IMPORTING, note, str(deal["id"]))
 
                 pipe = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 out, err = pipe.communicate()
 
                 # There should be no output if everything goes well
                 if out != b'':
-                    update_offline_deal_status(DEAL_STATUS_FAILED, str(out), str(deal["task_id"]), deal["deal_cid"])
+                    update_offline_deal_status(DEAL_STATUS_FAILED, str(out), str(deal["id"]))
                     logger.error("Import deal failed. CID: %s. Error message: %s", deal["deal_cid"], str(out))
                     continue
 
-                update_offline_deal_status(DEAL_STATUS_FILE_IMPORTED, "", str(deal["task_id"]), deal["deal_cid"])
+                update_offline_deal_status(DEAL_STATUS_FILE_IMPORTED, "", str(deal["id"]))
 
                 logger.info("Deal CID %s imported.", deal["deal_cid"])
                 logger.info("Sleeping...")
@@ -168,7 +168,7 @@ def importer():
             except Exception as e:
                 logger.error("Import deal failed. CID: %s. Error message: %s", deal["deal_cid"], str(e))
                 note = str(e)
-                update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["task_id"]), deal["deal_cid"])
+                update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["id"]))
                 continue
 
         logger.info("Sleeping...")

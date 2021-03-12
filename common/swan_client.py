@@ -117,14 +117,6 @@ class SwanClient:
             return e
 
     @SwanTool.refresh_token
-    def update_offline_deal_status(self, status: str, note: str, task_id: str, deal_cid: str):
-        url = self.api_url + "/my_miner/tasks/" + task_id + "/deals/" + deal_cid
-        update_offline_deal_status_method = "PUT"
-        body = {"status": status, "note": note}
-
-        send_http_request(url, update_offline_deal_status_method, self.jwt_token, body)
-
-    @SwanTool.refresh_token
     def update_offline_deal_details(self, status: str, note: str, deal_id, file_path=None, file_size=None):
         url = self.api_url + "/my_miner/deals/" + str(deal_id)
         update_offline_deal_details_method = "PUT"
