@@ -3,12 +3,10 @@ import re
 import subprocess
 import sys
 import time
+
 sys.path.append("../")
 from common.config import read_config
 from common.swan_client import SwanClient
-
-logging.config.fileConfig('./logging.conf')
-logger = logging.getLogger(__name__)
 
 DEAL_STATUS_FAILED = "ImportFailed"
 DEAL_STATUS_READY = "ReadyForImport"
@@ -21,8 +19,14 @@ ONCHAIN_DEAL_STATUS_ACTIVE = "StorageDealActive"
 ONCHAIN_DEAL_STATUS_NOTFOUND = "StorageDealNotFound"
 ONCHAIN_DEAL_STATUS_WAITTING = "StorageDealWaitingForData"
 
-# Number of deals to be imported at a time
+# Max number of deals to be imported at a time
 IMPORT_NUMNBER = "20"
+
+config = read_config()
+api_url = config['main']['api_url']
+api_key = config['main']['api_key']
+access_token = config['main']['access_token']
+client = SwanClient(api_url, api_key, access_token)
 
 
 def get_deal_on_chain_status(deal_cid: str):
@@ -54,8 +58,8 @@ def update_offline_deal_status(status: str, note: str, task_id: str, deal_cid: s
         logger.error(str(e))
 
 
-if __name__ == '__main__':
-
+def importer():
+    logger = logging.getLogger('swan_miner_deal_importer')
     config = read_config()
     api_url = config['main']['api_url']
     api_key = config['main']['api_key']
@@ -67,6 +71,7 @@ if __name__ == '__main__':
     while True:
         client = SwanClient(api_url, api_key, access_token)
         deals = client.get_offline_deals(miner_fid, DEAL_STATUS_READY, IMPORT_NUMNBER)
+
         if deals is None or isinstance(deals, Exception):
             if isinstance(deals, Exception):
                 logger.error(str(deals))
@@ -130,15 +135,15 @@ if __name__ == '__main__':
                 time.sleep(import_interval)
                 break
 
-            logger.info("Current epoch: %s. Deal starting epoch: %s", current_epoch, deal.start_epoch)
+            logger.info("Current epoch: %s. Deal starting epoch: %s", current_epoch, deal.get("start_epoch"))
             try:
-                if deal.start_epoch - current_epoch < expected_sealing_time:
+                if deal.get("start_epoch") - current_epoch < expected_sealing_time:
                     logger.info("Deal will start too soon. Do not import this deal.")
                     note = "Deal expired."
                     update_offline_deal_status(DEAL_STATUS_FAILED, note, str(deal["task_id"]), deal["deal_cid"])
                     continue
 
-                command = "lotus-miner storage-deals import-data " + deal.deal_cid + " " + deal.file_path
+                command = "lotus-miner storage-deals import-data " + deal.get("deal_cid") + " " + deal.get("file_path")
                 logger.info('Command: %s' % command)
 
                 note = ""

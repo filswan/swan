@@ -14,7 +14,7 @@ def stage_one(input_path, output_path: str):
 
 
 def generate_car(input_path, output_path: str):
-    logging.info('generating car file: %s' % input_path)
+    logging.info('Generating car file from: %s' % input_path)
     try:
         subprocess.check_output(['lotus', 'client', 'generate-car', input_path, output_path],
                                 stderr=subprocess.PIPE)
@@ -25,10 +25,11 @@ def generate_car(input_path, output_path: str):
 
 def import_by_lotus(file):
     # 1. import
+    logging.info('Generating data CID....')
     proc = subprocess.Popen(['lotus', 'client', 'import', file], stdout=subprocess.PIPE)
     resp = proc.stdout.readline().rstrip().decode('utf-8')
     data_cid = resp.split("Root ")[1]
-    print(data_cid)
+    logging.info('Data CID: %s' % data_cid)
 
     return data_cid
 
@@ -49,16 +50,20 @@ def generate_piece_cid(file_path: str):
         piece_size_match = re.findall(r'''Piece size:  ([0-9]*\.?[0-9]+ [B|KiB|MiB|GiB]+)''', line)
         if len(piece_size_match) > 0:
             piece_size = piece_size_match[0]
-    logging.info('finish generating car file: %s, piece cid: %s, piece size: %s' % (file_path, piece_cid, piece_size))
+    logging.info('car file Generated: %s, piece cid: %s, piece size: %s' % (file_path, piece_cid, piece_size))
     return [piece_cid, piece_size]
 
 
 def checksum(filename, hash_factory=hashlib.md5, chunk_num_blocks=128):
+    logging.info('Calculating md5 for file %s' % filename)
     h = hash_factory()
     with open(filename, 'rb') as f:
         for chunk in iter(lambda: f.read(chunk_num_blocks * h.block_size), b''):
             h.update(chunk)
-    return h.hexdigest()
+
+    _checksum = h.hexdigest()
+    logging.info('Calculated md5 %s' % _checksum)
+    return _checksum
 
 
 def move_file(from_path: str, to_dir: str):

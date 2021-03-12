@@ -1,0 +1,3 @@
+uid,source_file_name,source_file_path,source_file_md5,source_file_url,source_file_size,car_file_name,car_file_path,car_file_md5,car_file_url,car_file_size,deal_cid,data_cid,piece_cid,miner_id,start_epoch
+,,,,,source_file_size,,,,car_file_url,,,data_cid,piece_cid,,
+,,,,,6257,,,,http://download/deal.py.car,,,bafk2bzaceakefy2zyil7lpwp34znt7o4bmynq62e6t5jeyule2lgqh4hlb5ey,baga6ea4seaqk6xpsfg6jg6rcyc2usjgjydy7lmzxzg6xepzqwzb4hpwsmuu6wgq,,

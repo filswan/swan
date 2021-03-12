@@ -1,79 +1,85 @@
-# Swan Client
-## Want to use this project?
+# Swan Tool Kits
 
-### Basics
+Swan Tool Kits is a set of pragmatical tools to help client and miner automated the offline deal sending and importing
+process.
 
-1. Fork/Clone
-1. Activate a virtualenv
-1. Install the requirements
+In Swan project, a client is defined as a user who sends out deals, and a miner is a Filecoin node who imports and seals
+the deals to Filecoin network. A general guide of lotus offline deal can be found here:
 
-## Offline Deal
-### Prepare files for Offline Deal
-https://docs.filecoin.io/store/lotus/very-large-files/#maximizing-storage-per-sector
+https://docs.filecoin.io/store/lotus/very-large-files
 
-### Generate a unique piece CID
-Use the Lotus client to generate a CAR file of the input without importing:
+
+## If you are a client who wants to send deals
+
+
+Client Tool provides the following functions:
+
+* Generate Car files from downloaded source files.
+* Generate metadata e.g. Car file URI, start epoch, etc. and save them to a metadata CSV file.
+* Propose deals based on the metadata CSV file.
+* Generate a final CSV file contains deal IDs and miner id for miner to import deals.
+* Create tasks on Swan Platform.
+
+### How to use the client tool
+
+```shell
+git clone https://github.com/nebulaai/swan
+cd swan/miner
 ```
-lotus client generate-car <inputPath> <outputPath>
+Please check the [Client Tool Guide](https://github.com/nebulaai/swan/tree/main/client)
+
+## If you are a miner who wants to import deals
+Miner Tool provides the following functions:
+* Download Car file.
+* Import Car file.
+* Update deal status on Swan Platform.
+
+### How to use the miner tool
+
+```shell
+git clone https://github.com/nebulaai/swan
+cd swan/miner
 ```
-Use the Lotus client to generate the piece CID:
+Please check the [Miner Tool Guide](https://github.com/nebulaai/swan/tree/main/miner)
+
+## If you are a developer who wants to use Swan APIs
+
+The Swan APIs can be used to programmatically retrieve and analyze data.
+
+These APIs provide access to a variety of different resources including the following:
+
+* Authorization
+* Miners
+* Tasks
+
+### How to get access to the Swan APIs
+
+#### Step one: Signup a swan account
+
+You can create an account on [Filswan](https://www.filswan.com) site to get the API key support.
+
+#### Step two: Save your API keys and tokens and keep them secure
+
+Under "My Profile"->"Developer Settings", you can generate a set of API Keys and Access Tokens which can be used
+to make requests on behalf of your personal Swan account. Since these API keys and Access Tokens do not expire unless regenerated, we suggest
+creating environment variables or using a secure password manager.
+
+#### Step three: Set up your access
+
+You can get your jwt Bearer Token via the following API.
+
+```shell
+curl --location --request POST 'https://api.filswan.com/user/api_keys/jwt' \
+--data-raw '{
+    "access_token": "my-access-token",
+    "apikey": "my-apikey"
+}'
 ```
-lotus client commP <inputCarFilePath>
-```
-Use the Lotus client to generate the data CID:
-```
-lotus client import <inputCarFilePath>
-```
-### Propose an offline deal
-```
-lotus client deal --start-epoch <current_epoch+11640> --manual-piece-cid=CID --manual-piece-size=datasize <Data CID> <miner> <price> <duration>
-```
-The default start epoch is the 49 hours after you publish the deal, so it is current_epoch +5880
 
-We recommend you using 4 days for us prepare import for you, so it should be  current_epoch+(24*4+1)*60*2 = current_epoch+11640
+Once you get the token, you can use it to access Swan APIs via postman or other API tools.
 
-### Prepare CSV for Offline Sealing
+## Supported API Document
 
-Prepare the https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv with the data.
-You can upload a CSV with no deal id first, to enable miner downloading first.The re-upload it again after the downlownding car file completed.
-For fields you don't know, please add the '', e.g.  f019104,bafy2bzacebikhvpxget3hz55jno74llgv7nmohu4jdl2r2n6onlynqq7jh3v6,https://www.download.com/test.car,,343612 if you do not have the md5 at the moment.
+Please check bellow for the APIs currently supported
 
-There are two ways of uploading files:
-
-* One-stage Upload Complete step  **Generate a unique piece CID**, **Propose an offline deal**,  **Prepare CSV for
-  Offline Sealing**
-    * upload the csv with deal_cid
-
-* Two-stage Upload
-    * stage1: Complete step  **Generate a unique piece CID** , **upload the csv with deal_id empty**
-    * stage2:  Complete step  **Prepare CSV for Offline Sealing**, re-upload the csv with deal_id
-
-
-miner_id(mandatory) : miner you want to send the deal
-
-file_source_url(mandatory): remote URL for download car
-
-md5 (optional): md5sum used to verify the integrity of files
-
-start_epoch(mandatory): the epoch of the deal start
-
-deal_cid(mandatory if choose one-stage upload): Deal_id you need for sending, if you decide using two steps upload you can keep this field empty for the first time, and reuploaded for the 2nd time.
-
-
-
-### Upload CSV for Offline Sealing
-Send the CSV file with the following format https://github.com/nebulaai/trusted-miner/blob/main/import_deal_template.csv  to us via contact@nbai.io
-
-Note: md5 is optional, but it will good for you when retriving deals
-
-
-# For miners accept deals
-
-A list of trusted miners by region
-
-NBFS Canada get 5Tb Datacap from Filecoin plus project. As orgnizatin located in North America, NBFS would like to allocate the data to miners in NA and EU.
-
-Please add a pull request to trusted_miner.csv so we can add you to our next sending list.
-
-Thanks.
-
+[Filswan APIs](https://documenter.getpostman.com/view/13140808/TWDZJbzV)
