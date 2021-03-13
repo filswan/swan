@@ -123,6 +123,7 @@ def scanner():
                     update_offline_deal_status(DEAL_STATUS_ACTIVE, deal_complete_note, deal_id)
                     logger.info("Setting deal %s status as Active", deal_cid)
                 if on_chain_status == ONCHAIN_DEAL_STATUS_AWAITING:
+                    current_epoch = get_current_epoch()
                     if current_epoch != -1 and current_epoch > deal.get("start_epoch"):
                         note = "Sector is proved and active, while deal on chain status is " \
                                "StorageDealAwaitingPreCommit. Set deal status as ImportFailed."
