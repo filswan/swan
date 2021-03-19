@@ -106,7 +106,7 @@ class SwanClient:
         return send_http_request(update_miner_url, update_miner_method, self.jwt_token, payload_data)
 
     @SwanTool.refresh_token
-    def get_offline_deals(self, miner_fid: str, status: str, limit: int):
+    def get_offline_deals(self, miner_fid: str, status: str, limit: str):
         url = self.api_url + "/offline_deals/" + miner_fid + "?deal_status=" + status + "&limit=" + limit + "&offset=0"
 
         get_offline_deals_method = "GET"
@@ -115,14 +115,6 @@ class SwanClient:
             return response["deal"]
         except Exception as e:
             return e
-
-    @SwanTool.refresh_token
-    def update_offline_deal_status(self, status: str, note: str, task_id: str, deal_cid: str):
-        url = self.api_url + "/my_miner/tasks/" + task_id + "/deals/" + deal_cid
-        update_offline_deal_status_method = "PUT"
-        body = {"status": status, "note": note}
-
-        send_http_request(url, update_offline_deal_status_method, self.jwt_token, body)
 
     @SwanTool.refresh_token
     def update_offline_deal_details(self, status: str, note: str, deal_id, file_path=None, file_size=None):

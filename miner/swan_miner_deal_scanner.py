@@ -57,9 +57,9 @@ def get_current_epoch():
         return -1
 
 
-def update_offline_deal_status(status: str, note: str, task_id: str, deal_cid: str):
+def update_offline_deal_status(status: str, note: str, deal_id: str):
     try:
-        client.update_offline_deal_status(status, note, task_id, deal_cid)
+        client.update_offline_deal_details(status, note, deal_id)
     except Exception as e:
         logger.error("Failed to update offline deal status.")
         logger.error(str(e))
@@ -92,8 +92,8 @@ def scanner():
             continue
 
         for deal in deals:
+            deal_id = deal.get("id")
             deal_cid = deal.get("deal_cid")
-            task_id = deal.get("task_id")
             logger.info("ID: %s. Deal CID: %s. Deal Status: %s.", deal.get("id"), deal_cid, deal.get("status"))
             command = "lotus-miner storage-deals list -v | grep " + deal_cid
             try:
@@ -103,8 +103,8 @@ def scanner():
                     raise Exception(stderr)
                 if stdout == b'':
                     note = "Failed to find deal on chain."
-                    update_offline_deal_status(DEAL_STATUS_FAILED, note, str(task_id, deal_cid))
-                    raise Exception("Failed to find deal on chain. Deal CID: " + deal_cid)
+                    update_offline_deal_status(DEAL_STATUS_FAILED, note, deal_id)
+                    raise Exception("Failed to find deal on chain. Deal ID: " + deal_id)
                 stdout = stdout.decode("utf-8")
                 logger.info("Deal details: %s", stdout)
                 on_chain_message = ""
@@ -116,17 +116,18 @@ def scanner():
                     # Error message usually starts at bit 355
                     on_chain_message = stdout[355:].strip()
                     note = "Failed to find deal on chain."
-                    update_offline_deal_status(DEAL_STATUS_FAILED, note, str(task_id), deal_cid)
+                    update_offline_deal_status(DEAL_STATUS_FAILED, note, deal_id)
                     logger.info("Setting deal %s status as ImportFailed", deal_cid)
                 if on_chain_status == ONCHAIN_DEAL_STATUS_ACTIVE:
                     deal_complete_note = "Deal has been completed"
-                    update_offline_deal_status(DEAL_STATUS_ACTIVE, deal_complete_note, str(task_id), deal_cid)
+                    update_offline_deal_status(DEAL_STATUS_ACTIVE, deal_complete_note, deal_id)
                     logger.info("Setting deal %s status as Active", deal_cid)
                 if on_chain_status == ONCHAIN_DEAL_STATUS_AWAITING:
+                    current_epoch = get_current_epoch()
                     if current_epoch != -1 and current_epoch > deal.get("start_epoch"):
                         note = "Sector is proved and active, while deal on chain status is " \
                                "StorageDealAwaitingPreCommit. Set deal status as ImportFailed."
-                        update_offline_deal_status(DEAL_STATUS_FAILED, note, str(task_id), deal_cid)
+                        update_offline_deal_status(DEAL_STATUS_FAILED, note, deal_id)
                         logger.info("Setting deal %s status as ImportFailed due to on chain status bug.", deal_cid)
                 message = {
                     "on_chain_status": on_chain_status,
@@ -134,7 +135,7 @@ def scanner():
                 }
                 offline_deal_message = OfflineDealMessage(message_type=MESSAGE_TYPE_ON_CHAIN,
                                                           message_body=json.dumps(message),
-                                                          offline_deals_cid=deal.get("deal_cid"))
+                                                          offline_deals_cid=deal_cid)
                 # TODO: Update offline deal message to Swan
                 logger.info("On chain offline_deal message created. Message Body: %s.", json.dumps(message))
                 continue
@@ -144,7 +145,7 @@ def scanner():
                 }
                 offline_deal_message = OfflineDealMessage(message_type=MESSAGE_TYPE_SWAN,
                                                           message_body=json.dumps(message),
-                                                          offline_deals_cid=deal.get("deal_cid"))
+                                                          offline_deals_cid=deal_cid)
                 # TODO: Update offline deal message to Swan
                 logger.info("On chain offline_deal message created. Message Body: %s.", json.dumps(message))
                 logger.error(str(e))
