@@ -23,14 +23,16 @@ class DealConfig:
     miner_id = None
     sender_wallet = None
     max_price = None
-    is_verified_deal = None
+    verified_deal = None
+    fast_retrieval = None
     epoch_interval_hours = None
 
-    def __init__(self, miner_id, sender_wallet, max_price, is_verified_deal, epoch_interval_hours):
+    def __init__(self, miner_id, sender_wallet, max_price, verified_deal, fast_retrieval, epoch_interval_hours):
         self.miner_id = miner_id
         self.sender_wallet = sender_wallet
         self.max_price = max_price
-        self.is_verified_deal = is_verified_deal
+        self.verified_deal = verified_deal
+        self.fast_retrieval = fast_retrieval
         self.epoch_interval_hours = epoch_interval_hours
 
 
@@ -73,6 +75,7 @@ def get_miner_price(miner_fid: str):
 def propose_offline_deal(_price, _cost, piece_size, data_cid, piece_cid, deal_conf: DealConfig):
     start_epoch = get_current_epoch_by_current_time() + (deal_conf.epoch_interval_hours + 1) * EPOCH_PER_HOUR
     command = ['lotus', 'client', 'deal', '--from', deal_conf.sender_wallet, '--start-epoch', str(start_epoch),
+               '--fast-retrieval=' + str(deal_conf.fast_retrieval), '--verified-deal=' + str(deal_conf.verified_deal),
                '--manual-piece-cid', piece_cid, '--manual-piece-size', piece_size, data_cid, deal_conf.miner_id, _cost,
                DURATION]
     logging.info(command)
@@ -81,7 +84,9 @@ def propose_offline_deal(_price, _cost, piece_size, data_cid, piece_cid, deal_co
     logging.info("price: %s" % _price)
     logging.info("total cost: %s" % _cost)
     logging.info("start epoch: %s" % start_epoch)
-    input("Press Enter to continue...")
+    logging.info("fast-retrieval: %s" % deal_conf.fast_retrieval)
+    logging.info("verified-deal: %s" % deal_conf.verified_deal)
+    # input("Press Enter to continue...")
     proc = subprocess.Popen(command, stdout=subprocess.PIPE)
     resp = proc.stdout.readline().rstrip().decode('utf-8')
     deal_cid = resp
@@ -149,7 +154,7 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, task_name=None, csv_f
         prices = get_miner_price(deal_conf.miner_id)
 
         if prices:
-            if deal_conf.is_verified_deal:
+            if deal_conf.verified_deal:
                 price = prices['verified_price']
             else:
                 price = prices['price']

@@ -89,7 +89,8 @@ Support for IPFS node will be provided in 0.2.0 release.
 - **output_dir:** Output directory for saving generated Car files and CSVs
 
 - **public_deal:** [true/false] Whether deals in the tasks are public deals
-- **is_verified:** [true/false] Whether deals in this task are going to be sent as verified
+- **verified_deal:** [true/false] Whether deals in this task are going to be sent as verified
+- **fast_retrieval:** [true/false] Indicates that data should be available for fast retrieval
 - **generate_md5:** [true/false] Whether to generate md5 for each car file, note: this is a resource consuming action
 - **wallet:**  Wallet used for sending offline deals
 - **max_price:** Max price willing to pay per GiB/epoch for offline deal
