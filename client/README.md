@@ -92,6 +92,7 @@ Support for IPFS node will be provided in 0.2.0 release.
 - **verified_deal:** [true/false] Whether deals in this task are going to be sent as verified
 - **fast_retrieval:** [true/false] Indicates that data should be available for fast retrieval
 - **generate_md5:** [true/false] Whether to generate md5 for each car file, note: this is a resource consuming action
+- **manually_confirm:** [true/false] Whether to manually confirm each deal before sending
 - **wallet:**  Wallet used for sending offline deals
 - **max_price:** Max price willing to pay per GiB/epoch for offline deal
 - **start_epoch_hours:** start_epoch for deals in hours from current time

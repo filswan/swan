@@ -19,6 +19,7 @@ output_dir = "/tmp/tasks"
 public_deal = true
 verified_deal = true
 fast_retrieval = true
+manually_confirm = true
 generate_md5 = false
 wallet = ""
 max_price = "0"

@@ -223,8 +223,8 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
 
     path = str(path).strip("/")
     logging.info(
-        "Swan Client Settings: Public Task: %s  Verified Deals: %s  Connected to Swan: %s CSV/car File output dir: %s"
-        % (public_deal, verified_deal, not offline_mode, output_dir))
+        "Swan Client Settings: Public Task: %s,  Verified Deals: %s,  Connected to Swan: %s, CSV/car File output dir: %s"
+        % (str(public_deal).lower(), str(verified_deal).lower(), str(not offline_mode).lower(), output_dir))
     if path:
         download_url_prefix = os.path.join(download_url_prefix, path)
     # TODO: Need to support 2 stage
