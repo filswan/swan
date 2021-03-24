@@ -85,7 +85,7 @@ Support for IPFS node will be provided in 0.2.0 release.
 
 #### sender
 
-- **offline_mode:** [true/false] Default false. If it is set to true, you will not be able to create Swan task on filswan.com, but you can still create CSVs and Car Files for sending deals.
+- **offline_mode:** [true/false] Default false. If it is set to true, you will not be able to create Swan task on filswan.com, but you can still create CSVs and Car Files for sending deals
 - **output_dir:** Output directory for saving generated Car files and CSVs
 
 - **public_deal:** [true/false] Whether deals in the tasks are public deals
@@ -115,15 +115,25 @@ INFO:root:car file Generated: [car_files_output_dir]/ubuntu-15.04-server-i386.is
 INFO:root:Generating data CID....
 INFO:root:Data CID: bafykbzacebbq4g73e4he32ahyynnamrft2tva2jyjt5fsxfqv76anptmyoajw
 INFO:root:Car files output dir: [car_files_output_dir]
-INFO:root:Please upload car files to web server.
+INFO:root:Please upload car files to web server or ipfs server.
 ```
 If --out-dir is not provided, then the output directory for the car files will be: output_dir (specified in the configuration file) + a random uuid
 
 For example: /tmp/tasks/7f33a9d6-47d0-4635-b152-5e380733bf09
 
-### Step 2: Upload Car files to webserver
+### Step 2: Upload Car files to webserver or ipfs server
 
-After generate the car files, you need to copy the files to a web-server manually.
+After the car files are generated, you need to copy the files to a web-server manually, or you can upload the files to local ipfs server.
+
+If you decide to upload the files to local ipfs server:
+```shell
+python3 swan_cli.py upload --input-dir [input_file_dir]
+```
+The output will be like:
+```shell
+INFO:root:Uploading car file [car_file]
+INFO:root:Car file [car_file] uploaded: http://127.0.0.1:8080/ipfs/QmPrQPfGCAHwYXDZDdmLXieoxZP5JtwQuZMUEGuspKFZKQ
+```
 
 ### Step 3. Create a task
 
@@ -132,7 +142,7 @@ After generate the car files, you need to copy the files to a web-server manuall
 in config.toml: set public_deal = false
 
 ```shell
-python3 swan_cli.py task --input-dir [car_files_dir] --out-dir [output_files_dir] --miner [miner_id]
+python3 swan_cli.py task --input-dir [car_files_dir] --out-dir [output_files_dir] --miner [miner_id] --dataset [curated_dataset]
 ```
 
 The output will be like:
@@ -162,7 +172,7 @@ in config.toml: set public_deal = true
 1. Generate the public task
 
 ```shell
-python3 swan_cli.py task --input-dir [car_files_dir] --out-dir [output_files_dir] --name [task_name]
+python3 swan_cli.py task --input-dir [car_files_dir] --out-dir [output_files_dir] --name [task_name] --dataset [curated_dataset]
 ```
 
 **--input-dir (Required)** Each file under this directory will be converted to a Car file, the generated car file will be located
@@ -172,6 +182,9 @@ under the output folder defined in config.toml
 
 **--name (optional)** Given task name while creating task on Swan platform. Default:
 swan-task-uuid
+
+**--dataset (optional)** The curated dataset from which the Car files are generated
+
 
 Two CSV files are generated after successfully running the command: task-name.csv, task-name-metadata.csv.
 
