@@ -72,7 +72,7 @@ def get_miner_price(miner_fid: str):
                 'verified_price': verified_price}
 
 
-def propose_offline_deal(_price, _cost, piece_size, data_cid, piece_cid, deal_conf: DealConfig, manually_confirm: bool):
+def propose_offline_deal(_price, _cost, piece_size, data_cid, piece_cid, deal_conf: DealConfig, skip_confirmation: bool):
     start_epoch = get_current_epoch_by_current_time() + (deal_conf.epoch_interval_hours + 1) * EPOCH_PER_HOUR
     command = ['lotus', 'client', 'deal', '--from', deal_conf.sender_wallet, '--start-epoch', str(start_epoch),
                '--fast-retrieval=' + str(deal_conf.fast_retrieval).lower(), '--verified-deal=' + str(deal_conf.verified_deal).lower(),
@@ -86,7 +86,7 @@ def propose_offline_deal(_price, _cost, piece_size, data_cid, piece_cid, deal_co
     logging.info("start epoch: %s" % start_epoch)
     logging.info("fast-retrieval: %s" % str(deal_conf.fast_retrieval).lower())
     logging.info("verified-deal: %s" % str(deal_conf.verified_deal).lower())
-    if manually_confirm:
+    if not skip_confirmation:
         input("Press Enter to continue...")
     proc = subprocess.Popen(command, stdout=subprocess.PIPE)
     resp = proc.stdout.readline().rstrip().decode('utf-8')
@@ -116,7 +116,7 @@ def calculate_real_cost(sector_size_bytes, price_per_GiB):
     return real_cost
 
 
-def send_deals_to_miner(deal_conf: DealConfig, output_dir, manually_confirm: bool, task_name=None, csv_file_path=None, deal_list=None, task_uuid=None):
+def send_deals_to_miner(deal_conf: DealConfig, output_dir, skip_confirmation: bool, task_name=None, csv_file_path=None, deal_list=None, task_uuid=None):
 
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     attributes = [i for i in OfflineDeal.__dict__.keys() if not i.startswith("__")]
@@ -175,7 +175,7 @@ def send_deals_to_miner(deal_conf: DealConfig, output_dir, manually_confirm: boo
         cost = f'{calculate_real_cost(sector_size, price):.18f}'
 
         _deal_cid, _start_epoch = propose_offline_deal(price, str(cost), str(piece_size), data_cid, piece_cid,
-                                                       deal_conf, manually_confirm)
+                                                       deal_conf, skip_confirmation)
 
         file_exists = os.path.isfile(output_csv_path)
 

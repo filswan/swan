@@ -167,9 +167,7 @@ def upload_car_files(input_dir, config_path):
         logging.info("Please upload car files to web server manually.")
     else:
         gateway_address = config['ipfs-server']['gateway_address']
-        api_address = config['ipfs-server']['api_address']
         gateway_ip, gateway_port = SwanClient.parseMultiAddr(gateway_address)
-        api_ip, api_port = SwanClient.parseMultiAddr(api_address)
         car_files_list: List[CarFile] = []
         car_csv_path = input_dir + "/car.csv"
         with open(car_csv_path, "r") as csv_file:
@@ -180,10 +178,9 @@ def upload_car_files(input_dir, config_path):
                 for attr in row.keys():
                     car_file.__setattr__(attr, row.get(attr))
                 car_files_list.append(car_file)
-        ipfs_api_address = "http://" + api_ip + ":" + api_port
         for car_file in car_files_list:
             logging.info("Uploading car file %s" % car_file.car_file_name)
-            car_file_hash = SwanClient.upload_car_to_ipfs(ipfs_api_address, car_file.car_file_path)
+            car_file_hash = SwanClient.upload_car_to_ipfs(car_file.car_file_path)
             car_file.car_file_address = "http://" + gateway_ip + ":" + gateway_port + "/ipfs/" + car_file_hash
             logging.info("Car file %s uploaded: %s" % (car_file.car_file_name ,car_file.car_file_address))
 

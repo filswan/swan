@@ -10,7 +10,6 @@ port = 443
 path = "/download"
 
 [ipfs-server]
-api_address = "/ip4/127.0.0.1/tcp/5001"
 gateway_address = "/ip4/127.0.0.1/tcp/8080"
 
 [sender]
@@ -19,7 +18,7 @@ output_dir = "/tmp/tasks"
 public_deal = true
 verified_deal = true
 fast_retrieval = true
-manually_confirm = true
+skip_confirmation = true
 generate_md5 = false
 wallet = ""
 max_price = "0"

@@ -4,6 +4,7 @@ import time
 
 import jwt
 import requests
+import subprocess
 
 from common.Miner import Miner
 
@@ -124,16 +125,22 @@ class SwanClient:
 
         send_http_request(url, update_offline_deal_details_method, self.jwt_token, body)
 
-    def upload_car_to_ipfs(api_address: str, car_file_path: str):
-        url = api_address + "/api/v0/add"
-        upload_car_to_ipfs_method = "POST"
-        car_file = open(car_file_path, encoding = "ISO-8859-1")
-        payload_file = {"file": car_file}
-        with requests.request(url=url, method=upload_car_to_ipfs_method, files=payload_file) as r:
-            if r.status_code >= 400:
-                raise Exception(r.text)
-            else:
-                return r.json()['Hash']
+    def upload_car_to_ipfs(car_file_path: str):
+        cmd = "ipfs add " + car_file_path + " | grep added"
+        try:
+            pipe = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = pipe.communicate()
+            if stdout == b'':
+                logging.error("Upload file to ipfs server failed.")
+                return None
+            stdout = stdout.decode("utf-8")
+            # ipfs add output example: added QmU5bGL6gBRr4ShxQLv9hq97SvrEFAU1uea3FE17QGpdbS file
+            car_file_hash = stdout.split(" ")[1]
+            return car_file_hash
+
+        except Exception as error:
+            logging.error(str(error))
+            return None
 
     def parseMultiAddr(multiAddr: str):
         elements = multiAddr.split('/')
