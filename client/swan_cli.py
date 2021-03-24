@@ -29,6 +29,7 @@ if __name__ == '__main__':
     parser.add_argument('--out-dir', dest='out_dir', help="Path to the dir to generate car files and car csv")
 
     parser.add_argument('--miner', dest='miner_id', help="Miner ID to send deals to.")
+    parser.add_argument('--dataset', dest='dataset', help="Curated dataset.")
     parser.add_argument('--csv', dest='metadata_csv_path', help="The CSV file path of deal metadata.")
 
     args = parser.parse_args()
@@ -62,8 +63,9 @@ if __name__ == '__main__':
         task_name = args.__getattribute__('task_name')
         miner_id = args.__getattribute__('miner_id')
         out_dir = args.__getattribute__('out_dir')
+        curated_dataset = args.__getattribute__('dataset')
 
-        create_new_task(input_dir, out_dir, config_path, task_name, miner_id)
+        create_new_task(input_dir, out_dir, config_path, task_name, curated_dataset, miner_id)
 
     elif args.__getattribute__('function') == "deal":
         metadata_csv_path = args.__getattribute__('metadata_csv_path')

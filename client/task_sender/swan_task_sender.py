@@ -191,7 +191,7 @@ def upload_car_files(input_dir, config_path):
                 csv_writer.writerow(car_file.__dict__)
 
 
-def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
+def create_new_task(input_dir, out_dir, config_path, task_name, curated_dataset, miner_id=None):
     # todo move config reading to cli level
     config = read_config(config_path)
     output_dir = out_dir
@@ -277,6 +277,7 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
 
     task = SwanTask(
         task_name=task_name,
+        curated_dataset=curated_dataset,
         is_public=public_deal,
         is_verified=verified_deal
     )

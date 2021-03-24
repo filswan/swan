@@ -16,14 +16,16 @@ task_type_regular = "regular"
 class SwanTask:
     miner_id = None
 
-    def __init__(self, task_name: str, is_public: bool, is_verified: bool):
+    def __init__(self, task_name: str, curated_dataset: str, is_public: bool, is_verified: bool):
         self.task_name = task_name
+        self.curated_dataset = curated_dataset
         self.is_public = is_public
         self.is_verified = is_verified
 
     def to_request_dict(self):
         return {
             'task_name': self.task_name,
+            'curated_dataset': self.curated_dataset,
             'is_public': 1 if self.is_public else 0,
             'type': task_type_verified if self.is_verified else task_type_regular,
             'miner_id': self.miner_id if self.miner_id else ''
