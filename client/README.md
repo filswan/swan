@@ -49,17 +49,23 @@ In config.toml
 api_key = ""
 access_token = ""
 api_url = "https://api.filswan.com"
+storage_server_type = "ipfs server"
 
 [web-server]
-host = "http://nbai.io"
-port = 8080
+host = "https://nbai.io"
+port = 443
 path = "/download"
+
+[ipfs-server]
+gateway_address = "/ip4/127.0.0.1/tcp/8080"
 
 [sender]
 offline_mode = false
 output_dir = "/tmp/tasks"
-is_public = true
-is_verified = true
+public_deal = true
+verified_deal = true
+fast_retrieval = true
+skip_confirmation = false
 generate_md5 = false
 wallet = ""
 max_price = "0"
@@ -81,7 +87,11 @@ web-server is used to upload generated Car files. Miner will download Car files 
 The downloadable URL in the CSV file is built with the following format: host+port+path+filename,
 e.g. http://nbai.io:8080/download/<filename>
 
-Support for IPFS node will be provided in 0.2.0 release.
+#### ipfs-server
+
+ipfs-server is used to upload generated Car files. Miner will download Car files from this ipfs-server.
+The downloadable URL in the CSV file is built with the following format: host+port+ipfs+hash,
+e.g. http://host:port/ipfs/QmPrQPfGCAHwYXDZDdmLXieoxZP5JtwQuZMUEGuspKFZKQ
 
 #### sender
 
