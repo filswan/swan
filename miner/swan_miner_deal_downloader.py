@@ -22,7 +22,7 @@ MAX_DOWNLOADING_TASKS = 10
 
 
 def downloader():
-    subprocess.Popen(["aria2c", "--conf-path=" + ARIA_CONF])
+    # subprocess.Popen(["aria2c", "--conf-path=" + ARIA_CONF])
     logging.info("Start check_download_status.... ")
     sched = BackgroundScheduler()
     sched.add_job(

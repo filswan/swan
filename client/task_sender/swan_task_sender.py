@@ -50,7 +50,7 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
 
     with open(csv_path, "w") as csv_file:
         fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5',
-                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5']
+                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5', 'car_file_url']
         csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=fieldnames)
         csv_writer.writeheader()
 
@@ -84,12 +84,13 @@ def generate_car(_deal_list: List[OfflineDeal], target_dir) -> List[OfflineDeal]
                 'source_file_name': _deal.source_file_name,
                 'source_file_path': _deal.source_file_path,
                 'source_file_size': _deal.source_file_size,
-                'source_file_md5': _deal.source_file_md5
+                'source_file_md5': _deal.source_file_md5,
+                'car_file_url': ''
             }
             csv_writer.writerow(csv_data)
 
     logging.info("Car files output dir: " + target_dir)
-    logging.info("Please upload car files to web server.")
+    logging.info("Please upload car files to web server or ipfs server.")
     return _deal_list
 
 
@@ -143,7 +144,54 @@ def generate_car_files(input_dir, config_path, out_dir):
     generate_car(deal_list, output_dir)
 
 
-def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
+def upload_car_files(input_dir, config_path):
+
+    class CarFile:
+        car_file_name = None
+        car_file_path = None
+        piece_cid = None
+        data_cid = None
+        car_file_size = None
+        car_file_md5 = None
+        source_file_name = None
+        source_file_path = None
+        source_file_size = None
+        source_file_md5 = None
+        car_file_address = None
+
+    attributes = [i for i in CarFile.__dict__.keys() if not i.startswith("__")]
+
+    config = read_config(config_path)
+    storage_server_type = config['main']['storage_server_type']
+    if storage_server_type == "web server":
+        logging.info("Please upload car files to web server manually.")
+    else:
+        gateway_address = config['ipfs-server']['gateway_address']
+        gateway_ip, gateway_port = SwanClient.parseMultiAddr(gateway_address)
+        car_files_list: List[CarFile] = []
+        car_csv_path = input_dir + "/car.csv"
+        with open(car_csv_path, "r") as csv_file:
+            reader = csv.DictReader(csv_file, delimiter=',', fieldnames=attributes)
+            next(reader, None)
+            for row in reader:
+                car_file = CarFile()
+                for attr in row.keys():
+                    car_file.__setattr__(attr, row.get(attr))
+                car_files_list.append(car_file)
+        for car_file in car_files_list:
+            logging.info("Uploading car file %s" % car_file.car_file_name)
+            car_file_hash = SwanClient.upload_car_to_ipfs(car_file.car_file_path)
+            car_file.car_file_address = "http://" + gateway_ip + ":" + gateway_port + "/ipfs/" + car_file_hash
+            logging.info("Car file %s uploaded: %s" % (car_file.car_file_name ,car_file.car_file_address))
+
+        with open(car_csv_path, "w") as csv_file:
+            csv_writer = csv.DictWriter(csv_file, delimiter=',', fieldnames=attributes)
+            csv_writer.writeheader()
+            for car_file in car_files_list:
+                csv_writer.writerow(car_file.__dict__)
+
+
+def create_new_task(input_dir, out_dir, config_path, task_name, curated_dataset, miner_id=None):
     # todo move config reading to cli level
     config = read_config(config_path)
     output_dir = out_dir
@@ -158,6 +206,8 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
     api_key = config['main']['api_key']
     access_token = config['main']['access_token']
 
+    storage_server_type = config['main']['storage_server_type']
+
     host = config['web-server']['host']
     port = config['web-server']['port']
     path = config['web-server']['path']
@@ -170,8 +220,8 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
 
     path = str(path).strip("/")
     logging.info(
-        "Swan Client Settings: Public Task: %s  Verified Deals: %s  Connected to Swan: %s CSV/car File output dir: %s"
-        % (public_deal, verified_deal, not offline_mode, output_dir))
+        "Swan Client Settings: Public Task: %s,  Verified Deals: %s,  Connected to Swan: %s, CSV/car File output dir: %s"
+        % (str(public_deal).lower(), str(verified_deal).lower(), str(not offline_mode).lower(), output_dir))
     if path:
         download_url_prefix = os.path.join(download_url_prefix, path)
     # TODO: Need to support 2 stage
@@ -200,7 +250,7 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
     csv_file_path = input_dir + "/car.csv"
     with open(csv_file_path, "r") as csv_file:
         fieldnames = ['car_file_name', 'car_file_path', 'piece_cid', 'data_cid', 'car_file_size', 'car_file_md5',
-                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5']
+                      'source_file_name', 'source_file_path', 'source_file_size', 'source_file_md5', 'car_file_url']
         reader = csv.DictReader(csv_file, delimiter=',', fieldnames=fieldnames)
         next(reader, None)
         for row in reader:
@@ -211,8 +261,9 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
 
     # generate_car(deal_list, output_dir)
 
-    for deal in deal_list:
-        deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
+    if storage_server_type == "web server":
+        for deal in deal_list:
+            deal.car_file_url = os.path.join(download_url_prefix, deal.car_file_name)
 
     if not public_deal:
         final_csv_path = send_deals(config_path, miner_id, task_name, deal_list=deal_list, task_uuid=task_uuid)
@@ -226,6 +277,7 @@ def create_new_task(input_dir, out_dir, config_path, task_name, miner_id=None):
 
     task = SwanTask(
         task_name=task_name,
+        curated_dataset=curated_dataset,
         is_public=public_deal,
         is_verified=verified_deal
     )

@@ -18,6 +18,7 @@ ONCHAIN_DEAL_STATUS_ERROR = "StorageDealError"
 ONCHAIN_DEAL_STATUS_ACTIVE = "StorageDealActive"
 ONCHAIN_DEAL_STATUS_NOTFOUND = "StorageDealNotFound"
 ONCHAIN_DEAL_STATUS_WAITTING = "StorageDealWaitingForData"
+ONCHAIN_DEAL_STATUS_ACCEPT = "StorageDealAcceptWait"
 
 # Max number of deals to be imported at a time
 IMPORT_NUMNBER = "20"
@@ -111,6 +112,10 @@ def importer():
                 logger.info("Deal on chain status is active before importing.")
                 note = "Deal active before importing."
                 update_offline_deal_status(DEAL_STATUS_ACTIVE, note, str(deal["id"]))
+                continue
+
+            if on_chain_status == ONCHAIN_DEAL_STATUS_ACCEPT:
+                logger.info("Deal on chain status is StorageDealAcceptWait. Deal will be ready shortly.")
                 continue
 
             if on_chain_status == ONCHAIN_DEAL_STATUS_NOTFOUND:

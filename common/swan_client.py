@@ -4,6 +4,7 @@ import time
 
 import jwt
 import requests
+import subprocess
 
 from common.Miner import Miner
 
@@ -15,14 +16,16 @@ task_type_regular = "regular"
 class SwanTask:
     miner_id = None
 
-    def __init__(self, task_name: str, is_public: bool, is_verified: bool):
+    def __init__(self, task_name: str, curated_dataset: str, is_public: bool, is_verified: bool):
         self.task_name = task_name
+        self.curated_dataset = curated_dataset
         self.is_public = is_public
         self.is_verified = is_verified
 
     def to_request_dict(self):
         return {
             'task_name': self.task_name,
+            'curated_dataset': self.curated_dataset,
             'is_public': 1 if self.is_public else 0,
             'type': task_type_verified if self.is_verified else task_type_regular,
             'miner_id': self.miner_id if self.miner_id else ''
@@ -123,6 +126,27 @@ class SwanClient:
         body = {"status": status, "note": note, "file_path": file_path, "file_size": file_size}
 
         send_http_request(url, update_offline_deal_details_method, self.jwt_token, body)
+
+    def upload_car_to_ipfs(car_file_path: str):
+        cmd = "ipfs add " + car_file_path + " | grep added"
+        try:
+            pipe = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = pipe.communicate()
+            if stdout == b'':
+                logging.error("Upload file to ipfs server failed.")
+                return None
+            stdout = stdout.decode("utf-8")
+            # ipfs add output example: added QmU5bGL6gBRr4ShxQLv9hq97SvrEFAU1uea3FE17QGpdbS file
+            car_file_hash = stdout.split(" ")[1]
+            return car_file_hash
+
+        except Exception as error:
+            logging.error(str(error))
+            return None
+
+    def parseMultiAddr(multiAddr: str):
+        elements = multiAddr.split('/')
+        return elements[2], elements[4]
 
 
 def send_http_request(url, method, token, payload, file=None):
