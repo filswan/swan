@@ -5,7 +5,7 @@ import string
 import csv
 from miner_updater.swan_miner_updater import update_miner_info
 from task_sender.deal_sender import send_deals
-from task_sender.swan_task_sender import create_new_task, update_task_by_uuid, generate_car_files
+from task_sender.swan_task_sender import create_new_task, update_task_by_uuid, generate_car_files, upload_car_files
 
 
 def random_hash(length=6):
@@ -17,7 +17,7 @@ def random_hash(length=6):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Swan client')
 
-    parser.add_argument('function', metavar='task/deal', choices=['task', 'deal', 'miner', 'car'], type=str, nargs="?",
+    parser.add_argument('function', metavar='task/deal', choices=['task', 'deal', 'miner', 'car', 'upload'], type=str, nargs="?",
                         help='Create new Swan task/Send deal/Update miner info/Generate car file')
 
     parser.add_argument('--config', dest='config_path', default="./config.toml",
@@ -29,6 +29,7 @@ if __name__ == '__main__':
     parser.add_argument('--out-dir', dest='out_dir', help="Path to the dir to generate car files and car csv")
 
     parser.add_argument('--miner', dest='miner_id', help="Miner ID to send deals to.")
+    parser.add_argument('--dataset', dest='dataset', help="Curated dataset.")
     parser.add_argument('--csv', dest='metadata_csv_path', help="The CSV file path of deal metadata.")
 
     args = parser.parse_args()
@@ -45,6 +46,14 @@ if __name__ == '__main__':
 
         generate_car_files(input_dir, config_path, out_dir)
 
+    if args.__getattribute__('function') == 'upload':
+        input_dir = args.__getattribute__('input_dir')
+        if not input_dir:
+            print('Please provide --input-dir')
+            exit(1)
+
+        upload_car_files(input_dir, config_path)
+
     if args.__getattribute__('function') == 'task':
         input_dir = args.__getattribute__('input_dir')
         if not input_dir:
@@ -54,8 +63,9 @@ if __name__ == '__main__':
         task_name = args.__getattribute__('task_name')
         miner_id = args.__getattribute__('miner_id')
         out_dir = args.__getattribute__('out_dir')
+        curated_dataset = args.__getattribute__('dataset')
 
-        create_new_task(input_dir, out_dir, config_path, task_name, miner_id)
+        create_new_task(input_dir, out_dir, config_path, task_name, curated_dataset, miner_id)
 
     elif args.__getattribute__('function') == "deal":
         metadata_csv_path = args.__getattribute__('metadata_csv_path')

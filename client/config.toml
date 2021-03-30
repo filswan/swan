@@ -2,11 +2,15 @@
 api_key = ""
 access_token = ""
 api_url = "https://api.filswan.com"
+storage_server_type = "ipfs server"
 
 [web-server]
 host = "https://nbai.io"
 port = 443
 path = "/download"
+
+[ipfs-server]
+gateway_address = "/ip4/127.0.0.1/tcp/8080"
 
 [sender]
 offline_mode = false
@@ -14,6 +18,7 @@ output_dir = "/tmp/tasks"
 public_deal = true
 verified_deal = true
 fast_retrieval = true
+skip_confirmation = false
 generate_md5 = false
 wallet = ""
 max_price = "0"

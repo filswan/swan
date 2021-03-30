@@ -46,5 +46,9 @@ For config.toml
 ### Run
 
 ```shell
+aria2c --conf-path=./aria2.conf > /dev/null 2>&1
+```
+
+```shell
 python3 swan_miner.py
 ```
